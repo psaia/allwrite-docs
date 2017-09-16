@@ -25,6 +25,23 @@ The number between the two pipes (`n`) is what the menu is sorted by. It can be 
 
 Lastly, if zero is used (`|0|`), this is considered to be the landing page of the sub directory. If there is no directory, it is used as the default response, or "homepage". If a `|0|` is not provided for the root or sub directory, the `slug` property will be false. This is common when there isn't a landing page, only sub pages.
 
+
+Routing Example
+░░░░░░░░░░░░░░░
+
+
+|0| Getting Started ◀────────── Accessible via "/" or "/getting-started".
+|1| Who we are ◀─────────────── Accessible via "getting-started".
+|2| Configuration/◀─────────────Accessible via "/configuration".
+  |0| Why? ◀─────────────────── Accessible via "/configuration" or "/configuration/why".
+  |1| Using the CLI ◀────────── Accessible via "/configuration/using-the-cli".
+|3| The Dashboard/ ◀─────────── NOT accessible! Header only.
+  |1| Mathematics ◀──────────── Accessible via "/the-dashboard/mathematics".
+  |2| Machine Learning ◀─────── Accessible via "/the-dashboard/machine-learning".
+  |3| A.I. ◀─────────────────── Accessible via "/the-dashboard/ai".
+  About Us ◀─────────────────── Not public.
+
+
 ## Installation
 
 TODO:
