@@ -12,6 +12,7 @@ This is not a SaaS product and 100% open source. You just need to host it yourse
 * [Installation](#installation)
 * [Formatting](#formatting)
 * [API](#api)
+* [Examples](#examples)
 
 ## Workflow
 
@@ -122,3 +123,7 @@ If a page is not found, an error will be returned with error code `404`.
   "message": "We're sorry, but the page you were looking for could not be found."
 }
 ```
+
+## Examples
+
+Coming soon.
