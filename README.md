@@ -41,7 +41,7 @@ Write and organize your documentation using Google Drive.
 ]
 ```
 
-* `GET /page(/:slug)` Pull a page based on its slug. If not provided, `|0|` page will be used.
+`GET /page(/:slug)` Pull a page based on its slug. If not provided, `|0|` page will be used.
 
 ```json
 {
