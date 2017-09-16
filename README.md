@@ -8,11 +8,11 @@ This is not a SaaS product and 100% open source. You just need to host it yourse
 
 # Table of Contents
 
-* [How it works](#how-it-works)
-* [Installation](#installation)
+* [Workflow](#workflow)
 * [Formatting](#formatting)
-* [API](#api)
 * [Examples](#examples)
+* [Installation](#installation)
+* [API](#api)
 
 ## Workflow
 
@@ -39,14 +39,6 @@ Lastly, if zero is used (`|0|`), this is considered to be the landing page of th
   About Us ◀─────────────────── Not public.
 ```
 
-## Installation
-
-TODO:
-
-* The Go App
-* Docker image
-* Other quick and easy installation methods.
-
 ## Formatting
 
 Formatting within the document is done by using Google's wysiwyg, as usual. Allwrite then translates the content to well formatted html and markdown. Both the html and markdown formats are returned from the API so you may use which ever works best for you.
@@ -58,6 +50,18 @@ Formatting guide:
 * Unordered and ordered lists are treated as such.
 * Colors, text alignment, and other frills will have no effect. Create an issue if you have a suggestion.
 * Headers will be treated as such (`<h1>`, `<h2>`, and `<h3>`).
+
+## Examples
+
+Coming soon.
+
+## Installation
+
+TODO:
+
+* The Go App
+* Docker image
+* Other quick and easy installation methods.
 
 ## API
 
@@ -123,7 +127,3 @@ If a page is not found, an error will be returned with error code `404`.
   "message": "We're sorry, but the page you were looking for could not be found."
 }
 ```
-
-## Examples
-
-Coming soon.
