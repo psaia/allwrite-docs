@@ -10,10 +10,11 @@ This is not a SaaS product and 100% open source. You just need to host it yourse
 
 * [How it works](#how-it-works)
 * [API](#api)
+* [Installation](#installation)
 
 ## How it works
 
-You simply need to create pages and folders within the activated folder. Pages can have children infinitely deep by using directories. Pages and folders are both made public and ordered by using a special format in their page name:
+You simply need to create pages and folders within the activated folder. Pages can have children infinitely deep by using directories. Pages and folders are both made public and ordered by using a special format in their page name.
 
 ```
 |n| Page Title
@@ -78,3 +79,11 @@ If a page is not found, an error will be returned with error code `404`.
   "status": 404,
   "message": "We're sorry, but the page you were looking for could not be found."
 }
+
+## Installation
+
+TODO:
+
+* The Go App
+* Docker image
+* Other quick and easy installation routes.
