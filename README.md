@@ -4,7 +4,7 @@ Writing in Google Drive is enjoyable. When something is enjoyable, you tend to d
 
 This API connects with your Google Drive and provides endpoints which returns the folders and pages within Drive in a organized and usable format. With these endpoints, beautiful (or not) user interfaces can be created.
 
-This is not a SaaS product and 100% open source. You just need to host it yourself!
+This is not a SaaS product and 100% open source. You just need to host it yourself.
 
 # Table of Contents
 
