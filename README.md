@@ -11,6 +11,7 @@ This is not a SaaS product and 100% open source. You just need to host it yourse
 * [Workflow](#workflow)
 * [Formatting](#formatting)
 * [Examples](#examples)
+* [Themes](#themes)
 * [Installation](#installation)
 * [API](#api)
 
@@ -52,6 +53,10 @@ Formatting guide:
 * Headers will be treated as such (`<h1>`, `<h2>`, and `<h3>`).
 
 ## Examples
+
+Coming soon.
+
+## Themes
 
 Coming soon.
 
