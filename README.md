@@ -1,21 +1,25 @@
 # eggplant
 
-Writing in Google Drive is enjoyable. When something is enjoyable, you tend to do it more often and with better quality.
+Writing in Google Drive is enjoyable. When something is enjoyable, we tend to do it more often and with better quality.
 
-This API connects with your Google Drive and provides endpoints which returns the folders and pages within Drive in a organized and usable format. With these endpoints, beautiful (or not) user interfaces can be created.
+This API connects with your Google Drive and provides endpoints which returns the pages within Drive in a organized and usable format. With these endpoints, beautiful (or not) user interfaces can be created.
 
 This is not a SaaS product and 100% open source. You just need to host it yourself.
 
 # Table of Contents
 
-* [Steps](#steps)
+* [How it works](#how-it-works)
 * [API](#api)
 
-## Steps
+## How it works
 
-1. Authenticate with Google Drive.
-2. Build out your documentation.
-3. Install or create a theme using the API this module creates.
+Within the folder specified in the configuration file, you simply need to create pages and folders. Pages can have children infinitely deep by using directories. Files and folders are both made public and ordered by using a special format in their page name:
+
+```
+|n| Page Title
+```
+
+The number between the two pipes (`n`) is what the menu is sorted by. It can be any number. If a page or directory does not have this format, it will not be public. This is useful when writing pages that should not yet be public.
 
 ## API
 
