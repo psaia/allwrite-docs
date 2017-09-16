@@ -1,11 +1,10 @@
 # eggplant
 
-Write and organize your documentation using Google Drive.
+Writing in Google Drive is enjoyable. When something is more enjoyable, you tend to do it more often and with better quality.
 
-### Why?
+This API connects with your Google Drive and provides endpoints which returns the folders and pages within Drive in a organized and usable format. With these endpoints, beautiful (or not) user interfaces can be created.
 
-1. Write and organize the hierarchical structure of your documentation using Google Drive. This gives you the benefit of using its wysiwyg and user permissions. Not everyone in an organization wants to write markdown in GitHub.
-2. Get a nice API out of the box based on that Drive structure. Use a pre-made theme or make your own.
+This is not a SaaS product and 100% open source. You just need to host it yourself!
 
 # Table of Contents
 
