@@ -49,14 +49,14 @@ TODO:
 
 ## Formatting
 
-Formatting within the document is done by using Google's wysiwyg, as usual. Allwrite then translates the content to well formatted html and markdown. You may use which ever format you like.
+Formatting within the document is done by using Google's wysiwyg, as usual. Allwrite then translates the content to well formatted html and markdown. Both the html and markdown formats are returned from the API so you may use which ever works best for you.
 
-Other tips:
+Formatting guide:
 
 * Format code (`<code>`) by using the "Courier" font.
 * Indent a block of text for a `<blockquote>`.
 * Unordered and ordered lists are treated as such.
-* Colors will have no effect.
+* Colors, text alignment, and other frills will have no effect. Create an issue if you have a suggestion.
 * Headers will be treated as such (`<h1>`, `<h2>`, and `<h3>`).
 
 ## API
