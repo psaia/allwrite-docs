@@ -1,6 +1,6 @@
 # eggplant
 
-Writing in Google Drive is enjoyable. When something is more enjoyable, you tend to do it more often and with better quality.
+Writing in Google Drive is enjoyable. When something is enjoyable, you tend to do it more often and with better quality.
 
 This API connects with your Google Drive and provides endpoints which returns the folders and pages within Drive in a organized and usable format. With these endpoints, beautiful (or not) user interfaces can be created.
 
