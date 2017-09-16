@@ -1,8 +1,8 @@
 # Allwrite Docs
 
-Writing in Google Drive is enjoyable. When something is enjoyable, we tend to do it more often and with better quality.
+Writing in Google Drive is enjoyable. When something is enjoyable and accessible, we tend to do it more often and with better quality.
 
-This API connects with your Google Drive and provides endpoints which returns the pages within Drive in a organized and usable format. With these endpoints, beautiful (or not) user interfaces can be created.
+This API connects with your Google Drive and provides RESTful endpoints which return the pages within Drive in a organized and usable format. With this API, beautiful (or ugly) user interfaces can be created.
 
 This is not a SaaS product and 100% open source. You just need to host it yourself.
 
@@ -12,15 +12,15 @@ This is not a SaaS product and 100% open source. You just need to host it yourse
 * [API](#api)
 * [Installation](#installation)
 
-## How it works
+## Workflow
 
-You simply need to create pages and folders within the activated folder. Pages can have children infinitely deep by using directories. Pages and folders are both made public and ordered by using a special format in their page name.
+Give authors access to the activated folder using the typical means of doing so within Drive. Then authors can create pages and folders within the activated folder. Pages can have children infinitely deep by using directories. Pages and folders are both made public and ordered by using a special format in their page name.
 
 ```
 |n| Page Title
 ```
 
-The number between the two pipes (`n`) is what the menu is sorted by. It can be any number. If a page or directory does not have this format, it will not be public. This is useful when writing pages that should not yet be public.
+The number between the two pipes (`n`) is what the menu is sorted by. It can be any number. If a page or directory does not have this format, it will not be public. This is useful when writing pages that should not yet be public (aka drafts).
 
 Lastly, if zero is used (`|0|`), this is considered to be the landing page of the sub directory. If there is no directory, it is used as the default response, or "homepage". If a `|0|` is not provided for the root or sub directory, the `slug` property will be false. This is common when there isn't a landing page, only sub pages.
 
