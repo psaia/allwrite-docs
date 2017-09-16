@@ -26,10 +26,6 @@ The number between the two pipes (`n`) is what the menu is sorted by. It can be 
 Lastly, if zero is used (`|0|`), this is considered to be the landing page of the sub directory. If there is no directory, it is used as the default response, or "homepage". If a `|0|` is not provided for the root or sub directory, the `slug` property will be false. This is common when there isn't a landing page, only sub pages.
 
 ```
-Routing Example
-░░░░░░░░░░░░░░░
-
-
 |0| Getting Started ◀────────── Accessible via "/" or "/getting-started".
 |1| Who we are ◀─────────────── Accessible via "getting-started".
 |2| Configuration/◀─────────────Accessible via "/configuration".
