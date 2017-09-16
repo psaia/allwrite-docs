@@ -13,7 +13,7 @@ This is not a SaaS product and 100% open source. You just need to host it yourse
 
 ## How it works
 
-Within the folder specified in the configuration file, you simply need to create pages and folders. Pages can have children infinitely deep by using directories. Files and folders are both made public and ordered by using a special format in their page name:
+You simply need to create pages and folders within the activated folder. Pages can have children infinitely deep by using directories. Files and folders are both made public and ordered by using a special format in their page name:
 
 ```
 |n| Page Title
