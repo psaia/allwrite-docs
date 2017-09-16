@@ -25,7 +25,7 @@ Lastly, if zero is used (`|0|`), this is considered to be the landing page of th
 
 ## API
 
-`GET /menu` Returns an array of page fragments.
+`GET /menu 200` Returns an array of page fragments.
 
 ```json
 [
@@ -51,7 +51,7 @@ Lastly, if zero is used (`|0|`), this is considered to be the landing page of th
 ]
 ```
 
-`GET /page(/:slug)` Pull a page based on its slug. If not provided, `|0|` page will be used.
+`GET /page(/:slug) 200` Pull a page based on its slug. If not provided, `|0|` page will be used.
 
 ```json
 {
@@ -70,3 +70,11 @@ Lastly, if zero is used (`|0|`), this is considered to be the landing page of th
   ]
 }
 ```
+
+If a page is not found, an error will be returned with error code `404`.
+
+```json
+{
+  "status": 404,
+  "message": "We're sorry, but the page you were looking for could not be found."
+}
