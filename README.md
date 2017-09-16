@@ -1,4 +1,4 @@
-# eggplant
+# Allwrite Docs
 
 Writing in Google Drive is enjoyable. When something is enjoyable, we tend to do it more often and with better quality.
 
