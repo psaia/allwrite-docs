@@ -15,5 +15,48 @@ Write and organize your documentation using Google Drive.
 
 ### API
 
-* `GET /menu` Returns a full menu based on the Drive directory.
+`GET /menu` Returns an array of page fragments.
+
+```json
+[
+  {
+    "name": "Getting Start",
+    "slug": "getting-started",
+    "updated": 1500057521,
+    "children": []
+  },
+  {
+    "name": "Configure",
+    "slug": false,
+    "updated": 1500057521,
+    "children": [
+      {
+        "name": "Hello World",
+        "slug": "configure/hello-world",
+        "updated": 1500057521,
+        "children": false
+      }
+    ]
+  }
+]
+```
+
 * `GET /page(/:slug)` Pull a page based on its slug. If not provided, `|0|` page will be used.
+
+```json
+{
+  "name": "Configure",
+  "slug": "configure",
+  "updated": 1500057521,
+  "html": "<html here>",
+  "md": "<markdown here>",
+  "children": [
+    {
+      "name": "Hello World",
+      "slug": "configure/hello-world",
+      "updated": 1500057521,
+      "children": false
+     }
+  ]
+}
+```
