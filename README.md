@@ -1,6 +1,6 @@
 # eggplant
 
-Write and organize your documentation using Google Drive. This application is meant to be installed on a server and used with a theme.
+Write and organize your documentation using Google Drive.
 
 ### Why?
 
