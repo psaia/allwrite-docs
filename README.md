@@ -4,7 +4,7 @@ Write and organize your documentation using Google Drive.
 
 ### Why?
 
-1. Write and organize the hierarchical structure of your documentation using Google Drive. This gives you the benefit of using its wysiwyg and user permissions.
+1. Write and organize the hierarchical structure of your documentation using Google Drive. This gives you the benefit of using its wysiwyg and user permissions. Not everyone in an organization wants to write markdown in GitHub.
 2. Get a nice API out of the box based on that Drive structure. Use a pre-made theme or make your own.
 
 ### Steps
