@@ -10,8 +10,8 @@ This is not a SaaS product and 100% open source. You just need to host it yourse
 
 * [How it works](#how-it-works)
 * [Installation](#installation)
-* [API](#api)
 * [Formatting](#formatting)
+* [API](#api)
 
 ## Workflow
 
@@ -33,9 +33,23 @@ TODO:
 * Docker image
 * Other quick and easy installation routes.
 
+## Formatting
+
+Formatting within the document is done by using Google's wysiwyg, as usual. Allwrite then translates the content to well formatted html and markdown. You may use which ever format you like.
+
+Other tips:
+
+* Format code (`<code>`) by using the "Courier" font.
+* Indent a block of text for a `<blockquote>`.
+* Unordered and ordered lists are treated as such.
+* Colors will have no effect.
+* Headers will be treated as such (`<h1>`, `<h2>`, and `<h3>`).
+
 ## API
 
-`GET /menu 200` Returns an array of page fragments.
+#### GET /menu 200
+
+Returns a collection of page fragments.
 
 ```json
 [
@@ -61,7 +75,9 @@ TODO:
 ]
 ```
 
-`GET /page(/:slug) 200` Pull a page based on its slug. If not provided, `|0|` page will be used.
+#### GET /page(/:slug) 200
+
+Pull a page based on its slug. If not provided, `|0|` page will be used. Page fragments will be included as children if they exist.
 
 ```json
 {
@@ -89,15 +105,3 @@ If a page is not found, an error will be returned with error code `404`.
   "message": "We're sorry, but the page you were looking for could not be found."
 }
 ```
-
-## Formatting
-
-Formatting within the document is done by using Google's wysiwyg, as usual. Allwrite then translates the content to well formatted html and markdown. You may use which ever format you like.
-
-Other tips:
-
-* Format code (`<code>`) by using the "Courier" font.
-* Indent a block of text for a `<blockquote>`.
-* Unordered and ordered lists are treated as such.
-* Colors will have no effect.
-* Headers will be treated as such (`<h1>`, `<h2>`, and `<h3>`).
