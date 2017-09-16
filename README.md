@@ -47,7 +47,7 @@ Other tips:
 
 ## API
 
-#### GET /menu 200
+#### GET /menu 
 
 Returns a collection of page fragments.
 
@@ -75,7 +75,7 @@ Returns a collection of page fragments.
 ]
 ```
 
-#### GET /page(/:slug) 200
+#### GET /page(/:slug) 
 
 Pull a page based on its slug. If not provided, `|0|` page will be used. Page fragments will be included as children if they exist.
 
