@@ -44,7 +44,7 @@ TODO:
 
 * The Go App
 * Docker image
-* Other quick and easy installation routes.
+* Other quick and easy installation methods.
 
 ## Formatting
 
@@ -59,6 +59,8 @@ Other tips:
 * Headers will be treated as such (`<h1>`, `<h2>`, and `<h3>`).
 
 ## API
+
+There are only two endpoints!
 
 #### GET /menu 
 
