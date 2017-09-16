@@ -97,6 +97,8 @@ Pull a page based on its slug. If not provided, `|0|` page will be used. Page fr
 }
 ```
 
+#### Page not found
+
 If a page is not found, an error will be returned with error code `404`.
 
 ```json
