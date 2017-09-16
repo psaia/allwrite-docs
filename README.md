@@ -28,7 +28,7 @@ Lastly, if zero is used (`|0|`), this is considered to be the landing page of th
 ```
 |0| Getting Started ◀────────── Accessible via "/" or "/getting-started".
 |1| Who we are ◀─────────────── Accessible via "getting-started".
-|2| Configuration/◀─────────────Accessible via "/configuration".
+|2| Configuration/◀──────────── Accessible via "/configuration".
   |0| Why? ◀─────────────────── Accessible via "/configuration" or "/configuration/why".
   |1| Using the CLI ◀────────── Accessible via "/configuration/using-the-cli".
 |3| The Dashboard/ ◀─────────── NOT accessible! Header only.
