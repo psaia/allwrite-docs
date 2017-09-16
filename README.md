@@ -79,6 +79,7 @@ If a page is not found, an error will be returned with error code `404`.
   "status": 404,
   "message": "We're sorry, but the page you were looking for could not be found."
 }
+```
 
 ## Installation
 
