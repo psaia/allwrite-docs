@@ -21,6 +21,8 @@ Within the folder specified in the configuration file, you simply need to create
 
 The number between the two pipes (`n`) is what the menu is sorted by. It can be any number. If a page or directory does not have this format, it will not be public. This is useful when writing pages that should not yet be public.
 
+Lastly, if zero is used (`|0|`), this is considered to be the landing page of the sub directory. If there is no directory, it is used as the default response, or "homepage". If a `|0|` is not provided for the root or sub directory, the `slug` property will be false. This is common when there isn't a landing page, only sub pages.
+
 ## API
 
 `GET /menu` Returns an array of page fragments.
@@ -42,7 +44,7 @@ The number between the two pipes (`n`) is what the menu is sorted by. It can be 
         "name": "Hello World",
         "slug": "configure/hello-world",
         "updated": 1500057521,
-        "children": false
+        "children": []
       }
     ]
   }
@@ -63,7 +65,7 @@ The number between the two pipes (`n`) is what the menu is sorted by. It can be 
       "name": "Hello World",
       "slug": "configure/hello-world",
       "updated": 1500057521,
-      "children": false
+      "children": []
      }
   ]
 }
