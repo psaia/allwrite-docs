@@ -99,7 +99,7 @@ func getFiles(service *drive.Service, baseSlug string, parentID string) []model.
 				if parts.Order == 0 {
 					newPage.Slug = baseSlug
 				} else {
-					newPage.Slug = baseSlug + "/" + util.SlugMarshal(parts.Title)
+					newPage.Slug = baseSlug + "/" + util.MarshalSlug(parts.Title)
 				}
 
 				fmt.Printf("Saving page \"%s\" with slug \"%s\".\n", newPage.Name, newPage.Slug)
@@ -109,9 +109,9 @@ func getFiles(service *drive.Service, baseSlug string, parentID string) []model.
 				var dirBaseSlug string
 
 				if baseSlug != "/" {
-					dirBaseSlug = "/" + baseSlug + "/" + util.SlugMarshal(parts.Title)
+					dirBaseSlug = "/" + baseSlug + "/" + util.MarshalSlug(parts.Title)
 				} else {
-					dirBaseSlug = util.SlugMarshal(parts.Title)
+					dirBaseSlug = util.MarshalSlug(parts.Title)
 				}
 				fmt.Printf("Submerging deeper into %s\n", i.Name)
 				getFiles(service, dirBaseSlug, i.Id)

@@ -1,6 +1,7 @@
 package gdrive
 
 import (
+	"fmt"
 	"io/ioutil"
 	"strings"
 	"testing"
@@ -21,6 +22,7 @@ func TestMarshalMarkdownFromHTML(t *testing.T) {
 
 	r := strings.NewReader(htmlDoc)
 	transformedMd, err := MarshalMarkdownFromHTML(r)
+	fmt.Println(transformedMd)
 	if err != nil {
 		t.Error(err)
 	}

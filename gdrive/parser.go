@@ -23,8 +23,9 @@ var allowedTags = map[string]bool{
 	"h6":   true,
 }
 
+// Pull the style attribute text out from a node.
 func getStyle(attrs []html.Attribute) string {
-	style := ""
+	var style string
 	for _, a := range attrs {
 		if a.Key == "style" {
 			style = a.Val
@@ -34,12 +35,40 @@ func getStyle(attrs []html.Attribute) string {
 	return style
 }
 
+// Format the text based on the CSS string from the style attribute.
+func formatStyle(styleAttr string, content string) string {
+	if strings.Contains(styleAttr, "font-weight:700") {
+		content = fmt.Sprintf("**%s**", content)
+	}
+	if strings.Contains(styleAttr, "font-style:italic") {
+		content = fmt.Sprintf("*%s*", content)
+	}
+	if strings.Contains(styleAttr, "text-decoration:line-through") {
+		content = fmt.Sprintf("~~%s~~", content)
+	}
+	return content
+}
+
+// Count the number of children for a particular node.
+func numberOfChildren(n *html.Node) int {
+	if n == nil {
+		return -1
+	}
+
+	count := 0
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		count++
+	}
+
+	return count
+}
+
 func walk(b *bytes.Buffer, n *html.Node) {
 	if n.Type == html.TextNode {
 
 		primaryTag := n.Parent.Parent.DataAtom.String()
-		// style := getStyle(n.Parent.Attr)
-		iContent := strings.Trim(n.Data, " ")
+		style := getStyle(n.Parent.Attr)
+		iContent := formatStyle(style, strings.Trim(n.Data, " "))
 
 		if allowedTags[primaryTag] {
 			switch primaryTag {
@@ -56,6 +85,8 @@ func walk(b *bytes.Buffer, n *html.Node) {
 			case "h6":
 				b.WriteString(fmt.Sprintf("###### %s\n\n", iContent))
 			case "p":
+				// i := strconv.Itoa(numberOfChildren(n.Parent.Parent))
+				// fmt.Println("number of kids " + i)
 				b.WriteString(fmt.Sprintf("%s\n\n", iContent))
 			case "li":
 				superTag := n.Parent.Parent.Parent.DataAtom.String()
@@ -65,14 +96,7 @@ func walk(b *bytes.Buffer, n *html.Node) {
 					b.WriteString(fmt.Sprintf("* %s\n", iContent))
 				}
 			}
-			// b.WriteString("-----\n")
-			// b.WriteString("Tag: " + primaryTag + "\n")
-			// b.WriteString("Content: " + n.Data + "\n")
-			// b.WriteString("Style: " + style + "\n")
-			// b.WriteString("-----\n")
 		}
-		// 	// b.WriteString(n.DataAtom.String())
-		// 	// b.WriteString("\n")
 	}
 
 	for c := n.FirstChild; c != nil; c = c.NextSibling {

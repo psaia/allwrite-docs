@@ -33,8 +33,8 @@ var (
 	minusrepeatreg = regexp.MustCompile(`\-{2,}`)
 )
 
-// SlugMarshal function returns slugifies string "s"
-func SlugMarshal(s string, lower ...bool) string {
+// MarshalSlug function returns slugifies string "s"
+func MarshalSlug(s string, lower ...bool) string {
 	for _, r := range rExps {
 		s = r.re.ReplaceAllString(s, r.ch)
 	}
