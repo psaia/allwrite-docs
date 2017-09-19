@@ -1,5 +1,7 @@
 # Allwrite Docs
 
+**Currently in development**
+
 Writing in Google Drive is enjoyable. When something is enjoyable and accessible, we tend to do it more often and with better quality.
 
 This API connects with your Google Drive and provides RESTful endpoints which return the pages within Drive in a organized and usable format. With this API, beautiful (or ugly) user interfaces can be created and reused anywhere you need to display documentation online.
@@ -72,7 +74,7 @@ TODO:
 
 There are only two endpoints!
 
-#### GET /menu 
+#### GET /menu
 
 Returns a collection of page fragments.
 
@@ -100,7 +102,7 @@ Returns a collection of page fragments.
 ]
 ```
 
-#### GET /page(/:slug) 
+#### GET /page(/:slug)
 
 Pull a page based on its slug. If not provided, `|0|` page will be used. Page fragments will be included as children if they exist.
 

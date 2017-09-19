@@ -1,0 +1,18 @@
+package: allwrite-docs
+import:
+- package: google.golang.org/api
+  subpackages:
+  - drive/v3
+- package: golang.org/x/oauth2
+  subpackages:
+  - '...'
+- package: cloud.google.com/go
+  version: ^0.13.0
+  subpackages:
+  - compute/metadata
+- package: github.com/go-redis/redis
+  version: ^6.6.1
+- package: github.com/joeshaw/envdecode
+- package: github.com/shurcooL/sanitized_anchor_name
+- package: gopkg.in/russross/blackfriday.v2
+  version: ^2.0.0

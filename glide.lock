@@ -1,0 +1,24 @@
+hash: 5b813e75a7d5dacda4158c2e663b79260754af4249bb46c1db39098042116ae1
+updated: 2017-09-18T23:34:52.492753086-04:00
+imports:
+- name: cloud.google.com/go
+  version: 5a9e19d4e1e41a734154e44a2132b358afb49a03
+  subpackages:
+  - compute/metadata
+- name: github.com/go-redis/redis
+  version: fdafb11e5fa5d52d965e12073c8a58468c98ebe2
+- name: github.com/joeshaw/envdecode
+  version: 6326cbed175e32cd5183be1cc1027e0823c91edb
+- name: github.com/shurcooL/sanitized_anchor_name
+  version: 86672fcb3f950f35f2e675df2240550f2a50762f
+- name: golang.org/x/oauth2
+  version: 13449ad91cb26cb47661c1b080790392170385fd
+  subpackages:
+  - '...'
+- name: google.golang.org/api
+  version: 39c3dd417c5a443607650f18e829ad308da08dd2
+  subpackages:
+  - drive/v3
+- name: gopkg.in/russross/blackfriday.v2
+  version: 187c33ff049bddf24fc5c5b82facfdd62813a552
+testImports: []
