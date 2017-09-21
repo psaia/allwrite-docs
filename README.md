@@ -72,7 +72,7 @@ TODO:
 
 ## API
 
-There are only two endpoints!
+There are three endpoints.
 
 #### GET /menu
 
@@ -123,6 +123,10 @@ Pull a page based on its slug. If not provided, `|0|` page will be used. Page fr
   ]
 }
 ```
+
+#### GET /search/:q
+
+This will search for results based on your q parameter. The string needs to be URL encoded.
 
 #### Page not found
 
