@@ -1,8 +1,21 @@
 package util
 
+import (
+	"github.com/LevInteractive/allwrite-docs/store"
+)
+
 // Conf - Configuration.
 type Conf struct {
-	ActiveDir string `env:"ACTIVE_DIR,required"`
-	RedisHost string `env:"REDIS_HOST,default=localhost"`
-	RedisPort string `env:"REDIS_PORT,default=6379"`
+	ActiveDir        string `env:"ACTIVE_DIR,required"`
+	StoreType        string `env:"STORAGE,required"`
+	PostgresUser     string `env:"PG_USER"`
+	PostgresPassword string `env:"PG_PASS"`
+	PostgresHost     string `env:"PG_HOST"`
+	PostgresDBName   string `env:"PG_DB"`
+}
+
+// Env is a environment specific struct.
+type Env struct {
+	DB  store.Store
+	CFG *Conf
 }

@@ -9,7 +9,7 @@ import (
 	"golang.org/x/net/html"
 )
 
-// TagParsers is a map for handling each type of element.
+// TagParsers is a map for handling each type of block element.
 var TagParsers = map[string]func(*bytes.Buffer, *html.Node){
 	"p":  P,
 	"h1": Header,
@@ -25,6 +25,11 @@ var TagParsers = map[string]func(*bytes.Buffer, *html.Node){
 // Pulls a link out of our custom format.
 var linkRegexp *regexp.Regexp = regexp.MustCompile(
 	"___LINKΔΔΔ([^Δ]*)ΔΔΔ",
+)
+
+// Pulls an image out of our custom format.
+var imgRegexp *regexp.Regexp = regexp.MustCompile(
+	"___IMGΔΔΔ([^Δ]*)ΔΔΔ",
 )
 
 // FormatStyle an inline style. All text gets procssed through here so we can
@@ -51,6 +56,17 @@ func FormatStyle(css string, content string) string {
 			fmt.Println("Could not find link! " + css)
 		}
 	}
+
+	fmt.Println(css)
+	if imgRegexp.Match([]byte(css)) {
+		result := imgRegexp.FindStringSubmatch(css)
+		if len(result) == 2 {
+			parts := strings.Split(result[1], "∏")
+			content = fmt.Sprintf("![%s](%s)", parts[0], parts[1])
+		} else {
+			fmt.Println("Could not find alt and src from image! " + css)
+		}
+	}
 	return content
 }
 
@@ -75,6 +91,12 @@ func InlineWalker(b *bytes.Buffer, n *html.Node, parentCSS string) {
 			// If it's a link, inject the link href. Hackylovely AF.
 			if c.DataAtom.String() == "a" {
 				styles += "___LINKΔΔΔ" + GetAttr(c.Attr, "href") + "ΔΔΔ___"
+			}
+
+			if c.DataAtom.String() == "img" {
+				alt := GetAttr(c.Attr, "alt")
+				src := GetAttr(c.Attr, "src")
+				styles += "___IMGΔΔΔ" + alt + "∏" + src + "ΔΔΔ___"
 			}
 
 			InlineWalker(b, c, styles)

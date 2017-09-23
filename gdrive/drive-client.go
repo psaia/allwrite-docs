@@ -17,6 +17,11 @@ import (
 	drive "google.golang.org/api/drive/v3"
 )
 
+// Client holds the instance to a drive service client. This is returned.
+type Client struct {
+	Service *drive.Service
+}
+
 func getClient(ctx context.Context, config *oauth2.Config) *http.Client {
 	cacheFile, err := tokenCacheFile()
 	if err != nil {
@@ -89,7 +94,7 @@ func saveToken(file string, token *oauth2.Token) {
 
 // DriveClient sets up the authentication for drive by retreiving the access
 // token.
-func DriveClient() *drive.Service {
+func DriveClient() *Client {
 	ctx := context.Background()
 
 	b, err := ioutil.ReadFile("client_secret.json")
@@ -110,5 +115,5 @@ func DriveClient() *drive.Service {
 		log.Fatalf("Unable to retrieve drive Client %v", err)
 	}
 
-	return srv
+	return &Client{srv}
 }

@@ -48,6 +48,7 @@ Formatting within the document is done by using Google's wysiwyg, as usual. Allw
 
 Formatting guide:
 
+* Images just work. Plus they're hosted by Google for free!
 * Format code (`<code>`) by using the "Courier" font.
 * Indent a block of text for a `<blockquote>`.
 * Unordered and ordered lists are treated as such.

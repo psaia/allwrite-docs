@@ -10,7 +10,6 @@ import (
 
 	"github.com/LevInteractive/allwrite-docs/model"
 	"github.com/LevInteractive/allwrite-docs/util"
-	drive "google.golang.org/api/drive/v3"
 )
 
 const parentDir string = "0B4pmjFk2yyz2NFcwZzQwVHlCRWc"
@@ -20,8 +19,8 @@ type titleParts struct {
 	Order int64
 }
 
-func getContents(service *drive.Service, id string, mimeType string) ([]byte, error) {
-	res, err := service.Files.Export(id, mimeType).Download()
+func (client *Client) getContents(id string, mimeType string) ([]byte, error) {
+	res, err := client.Service.Files.Export(id, mimeType).Download()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -47,8 +46,8 @@ func getPartsFromTitle(title string) (*titleParts, error) {
 	return &titleParts{}, nil
 }
 
-func getFiles(service *drive.Service, baseSlug string, parentID string) []model.Page {
-	r, err := service.Files.List().
+func (client *Client) getFiles(baseSlug string, parentID string) []model.Page {
+	r, err := client.Service.Files.List().
 		PageSize(1000).
 		Q("'" + parentID + "' in parents").
 		Do()
@@ -79,7 +78,7 @@ func getFiles(service *drive.Service, baseSlug string, parentID string) []model.
 			// Switch depending on type of ducment.
 			switch mime := i.MimeType; mime {
 			case "application/vnd.google-apps.document":
-				htmlBytes, err := getContents(service, i.Id, "text/html")
+				htmlBytes, err := client.getContents(i.Id, "text/html")
 				if err != nil {
 					fmt.Printf("Skipping. There was an error grabbing the contents for a document: %s", err.Error())
 					continue
@@ -114,7 +113,7 @@ func getFiles(service *drive.Service, baseSlug string, parentID string) []model.
 					dirBaseSlug = util.MarshalSlug(parts.Title)
 				}
 				fmt.Printf("Submerging deeper into %s\n", i.Name)
-				getFiles(service, dirBaseSlug, i.Id)
+				client.getFiles(dirBaseSlug, i.Id)
 				break
 			default:
 				fmt.Printf("Unknown filetype in drive directory: %s\n", mime)
@@ -127,10 +126,10 @@ func getFiles(service *drive.Service, baseSlug string, parentID string) []model.
 }
 
 // UpdateMenu is
-func UpdateMenu(cfg *util.Conf, service *drive.Service) {
-	_ = getFiles(
-		service,
+func UpdateMenu(env *util.Env) {
+	client := DriveClient()
+	client.getFiles(
 		"/",
-		cfg.ActiveDir,
+		env.CFG.ActiveDir,
 	)
 }
