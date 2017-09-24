@@ -8,6 +8,7 @@ import (
 type Conf struct {
 	ActiveDir        string `env:"ACTIVE_DIR,required"`
 	StoreType        string `env:"STORAGE,required"`
+	Port             string `env:"PORT,required"`
 	PostgresUser     string `env:"PG_USER"`
 	PostgresPassword string `env:"PG_PASS"`
 	PostgresHost     string `env:"PG_HOST"`

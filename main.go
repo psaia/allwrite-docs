@@ -2,8 +2,10 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"log"
 
+	"github.com/LevInteractive/allwrite-docs/api"
 	"github.com/LevInteractive/allwrite-docs/gdrive"
 	"github.com/LevInteractive/allwrite-docs/store/postgres"
 	"github.com/LevInteractive/allwrite-docs/util"
@@ -37,5 +39,9 @@ func main() {
 		panic(errors.New("you must specify a storage system"))
 	}
 
-	gdrive.UpdateMenu(env)
+	if err := gdrive.UpdateMenu(env); err != nil {
+		fmt.Printf("Could not pull the latest from Google: %s", err.Error())
+	}
+
+	api.Listen(env)
 }

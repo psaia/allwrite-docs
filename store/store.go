@@ -7,7 +7,7 @@ import "github.com/LevInteractive/allwrite-docs/model"
 // with a cursor implementation. Search is also very simple. Could add a few
 // more parameters eventually.
 type Store interface {
-	SavePage(*model.Page) (*model.Page, error)
+	SavePages([]*model.Page) ([]*model.Page, error)
 	RemoveAll() error
 	GetPage(slug string) (*model.Page, error)
 	GetMenu() ([]*model.PageFragment, error)

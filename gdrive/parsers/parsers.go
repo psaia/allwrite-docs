@@ -57,7 +57,6 @@ func FormatStyle(css string, content string) string {
 		}
 	}
 
-	fmt.Println(css)
 	if imgRegexp.Match([]byte(css)) {
 		result := imgRegexp.FindStringSubmatch(css)
 		if len(result) == 2 {
