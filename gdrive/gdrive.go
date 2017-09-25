@@ -17,16 +17,17 @@ const parentDir string = "0B4pmjFk2yyz2NFcwZzQwVHlCRWc"
 
 type titleParts struct {
 	Title string
-	Order int64
+	Order int
 }
 
 type pages struct {
 	sync.Mutex
-	collection []*model.Page
+	collection model.Pages
 	wg         *sync.WaitGroup
 }
 
-// Obtain the contents of a google doc by its ID.
+// Obtain the contents of a google doc by its ID. This essentially pulls the
+// nasty html.
 func (client *Client) getContents(id string, mimeType string) ([]byte, error) {
 	res, err := client.Service.Files.Export(id, mimeType).Download()
 	if err != nil {
@@ -50,7 +51,7 @@ func getPartsFromTitle(title string) (*titleParts, error) {
 	result := re.FindStringSubmatch(strings.Trim(title, " "))
 
 	if len(result) == 3 {
-		order, err := strconv.ParseInt(result[1], 10, 64)
+		order, err := strconv.Atoi(result[1])
 		if err != nil {
 			return &titleParts{}, err
 		}
@@ -63,6 +64,36 @@ func getPartsFromTitle(title string) (*titleParts, error) {
 	return &titleParts{}, nil
 }
 
+// Determines if the slice already contains a page that isn't a directory with
+// the same slug.
+func hasLandingPage(collection model.Pages, dir *model.Page) bool {
+	hasLanding := false
+	for _, page := range collection {
+		if page.Type == "file" && page.Slug == dir.Slug {
+			hasLanding = true
+			break
+		}
+	}
+	return hasLanding
+}
+
+// Will take in an existing list and remove any directory pages which have the
+// same slug as a "file" page.
+func consolidate(collection model.Pages) model.Pages {
+	newSlice := make(model.Pages, 0, len(collection))
+	for _, page := range collection {
+		if page.Type == "dir" {
+			if hasLandingPage(collection, page) == false {
+				newSlice = append(newSlice, page)
+			}
+		} else {
+			newSlice = append(newSlice, page)
+		}
+	}
+	return newSlice
+}
+
+// Query google and walk its directory structure pulling out files.
 func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID string, pages *pages) {
 	defer pages.wg.Done()
 
@@ -89,6 +120,16 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 				fmt.Printf("Skipping document because of format: %s\n", i.Name)
 				continue
 			}
+
+			// Define the page that will be saved.
+			newPage := &model.Page{
+				Name:    parts.Title,
+				DocID:   i.Id,
+				Order:   parts.Order,
+				Created: i.CreatedTime,
+				Updated: i.ModifiedTime,
+			}
+
 			// Switch depending on type of ducment.
 			switch mime := i.MimeType; mime {
 			case "application/vnd.google-apps.document":
@@ -97,20 +138,14 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 					fmt.Printf("Skipping. There was an error grabbing the contents for a document: %s", err.Error())
 					continue
 				}
-
 				md, err := MarshalMarkdownFromHTML(bytes.NewReader(htmlBytes))
 				if err != nil {
 					fmt.Printf("There was a problem parsing html to markdown: %s", err.Error())
 					continue
 				}
 
-				newPage := &model.Page{
-					Name:    parts.Title,
-					DocID:   i.Id,
-					Created: i.CreatedTime,
-					Md:      md,
-					Updated: i.ModifiedTime,
-				}
+				newPage.Md = md
+				newPage.Type = "file"
 
 				if parts.Order == 0 {
 					// If the order is 0, always take on the same path as the directory.
@@ -123,11 +158,6 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 					}
 				}
 
-				//
-				// @TODO
-				// Need to uniquify the slug here. Can worry about later.
-				//
-
 				fmt.Printf("Saving page \"%s\" with slug \"%s\".\n", newPage.Name, newPage.Slug)
 				pages.atomicAppendPage(newPage)
 
@@ -139,8 +169,13 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 				} else {
 					dirBaseSlug = util.MarshalSlug(parts.Title)
 				}
-				fmt.Printf("Submerging deeper into %s\n", i.Name)
+				newPage.Type = "dir"
+				newPage.Slug = dirBaseSlug
+				fmt.Printf("Saving directory \"%s\" with slug \"%s\".\n", newPage.Name, newPage.Slug)
+				pages.atomicAppendPage(newPage)
+
 				pages.wg.Add(1)
+				fmt.Printf("Submerging deeper into %s\n", i.Name)
 				go client.processDriveFiles(env, dirBaseSlug, i.Id, pages)
 			default:
 				fmt.Printf("Unknown filetype in drive directory: %s\n", mime)
@@ -156,7 +191,6 @@ func UpdateMenu(env *util.Env) error {
 	client := DriveClient()
 	var wg sync.WaitGroup
 	p := &pages{wg: &wg}
-
 	p.wg.Add(1)
 
 	go client.processDriveFiles(
@@ -168,13 +202,14 @@ func UpdateMenu(env *util.Env) error {
 
 	p.wg.Wait()
 
+	// Loop through and remove any directories that have parent pages.
+	p.collection = consolidate(p.collection)
+
 	if err := env.DB.RemoveAll(); err != nil {
 		return err
 	}
-
 	if _, err := env.DB.SavePages(p.collection); err != nil {
 		return err
 	}
-
 	return nil
 }

@@ -21,16 +21,16 @@ type Store struct {
 //
 // The upsert here is also completely unncessary because we are removing all
 // rows anytime it's updated. Just keeping it because it doesn't hurt.
-func (p *Store) SavePages(pages []*model.Page) ([]*model.Page, error) {
+func (p *Store) SavePages(pages model.Pages) (model.Pages, error) {
 	tx, err := p.driver.Begin()
 	if err != nil {
 		return pages, err
 	}
 	stmt, err := tx.Prepare(`
-		INSERT INTO pages (doc_id, title, slug, md)
-		VALUES ($1, $2, $3, $4)
+		INSERT INTO pages (doc_id, type, title, slug, md, placement)
+		VALUES ($1, $2, $3, $4, $5, $6)
 		ON CONFLICT (doc_id)
-		DO UPDATE set (title, slug, md) = ($2, $3, $4)
+		DO UPDATE set (type, title, slug, md, placement) = ($2, $3, $4, $5, $6)
 		WHERE pages.doc_id = $1
 	`)
 
@@ -45,9 +45,11 @@ func (p *Store) SavePages(pages []*model.Page) ([]*model.Page, error) {
 	for _, page := range pages {
 		if _, err := stmt.Exec(
 			page.DocID,
+			page.Type,
 			page.Name,
 			page.Slug,
 			page.Md,
+			page.Order,
 		); err != nil {
 			tx.Rollback()
 			statementError = err
@@ -73,14 +75,19 @@ func (p *Store) RemoveAll() error {
 
 // GetPage saves a page.
 func (p *Store) GetPage(slug string) (*model.Page, error) {
-	stmt := `SELECT doc_id, title, slug, md FROM pages WHERE slug = $1`
+	stmt := `
+	SELECT doc_id, type, title, slug, md, placement
+	FROM pages
+	WHERE slug = $1 AND type = "file"`
 	var page model.Page
 
 	err := p.driver.QueryRow(stmt, slug).Scan(
 		&page.DocID,
+		&page.Type,
 		&page.Name,
 		&page.Slug,
 		&page.Md,
+		&page.Order,
 	)
 
 	switch err {
