@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -18,7 +17,7 @@ import (
 
 var items = Pages{
 	&Page{
-		Order: 2,
+		Order: 3,
 		Name:  "Images!",
 		Type:  "file",
 		Slug:  "images",
@@ -30,7 +29,7 @@ var items = Pages{
 		Slug:  "",
 	},
 	&Page{
-		Order: 1,
+		Order: 2,
 		Name:  "A Sub Directory",
 		Type:  "dir",
 		Slug:  "a-sub-directory",
@@ -42,7 +41,7 @@ var items = Pages{
 		Slug:  "a-sub-directory/how-to-be-a-friend",
 	},
 	&Page{
-		Order: 0,
+		Order: 1,
 		Name:  "Only one deep",
 		Type:  "file",
 		Slug:  "another-sub-directory",
@@ -57,27 +56,38 @@ var items = Pages{
 
 func TestMenuSorting(t *testing.T) {
 	sorted := PageTree(items)
-	// sorted := items
 
-	// json, err := json.Marshal(sorted)
-	// if err != nil {
-	// 	t.Error(err)
-	// }
-	for _, s := range sorted {
-		fmt.Println(s)
+	if len(sorted) != 4 {
+		t.Error("There should only be 4.")
+	}
+	if sorted[0].Name != "Homepage" {
+		t.Error("Sorting is out of order: " + sorted[0].Name)
+	}
+	if len(sorted[0].Children) != 0 {
+		t.Error("Index 0 should have zero children.")
 	}
 
-	// mdDoc := getFixture("./fixtures/sample-doc.md")
-	// htmlDoc := getFixture("./fixtures/sample-doc.html")
-	//
-	// r := strings.NewReader(htmlDoc)
-	// transformedMd, err := MarshalMarkdownFromHTML(r)
-	//
-	// if err != nil {
-	// 	t.Error(err)
-	// }
-	//
-	// if transformedMd != mdDoc {
-	// 	t.Error("HTML did not translate to markdown properly.")
-	// }
+	if sorted[1].Name != "Only one deep" {
+		t.Error("Sorting is out of order: " + sorted[1].Name)
+	}
+	if len(sorted[1].Children) != 1 {
+		t.Error("Index 1 should have 1 child.")
+	}
+
+	if sorted[2].Name != "A Sub Directory" {
+		t.Error("Sorting is out of order: " + sorted[2].Name)
+	}
+	if len(sorted[2].Children) != 1 {
+		t.Error("Index 2 should have 2 children.")
+	}
+
+	if sorted[3].Name != "Images!" {
+		t.Error("Sorting is out of order: " + sorted[3].Name)
+	}
+	if len(sorted[3].Children) != 0 {
+		t.Error("Index 3 should have no children")
+	}
+	if sorted[1].Children[0].Name != "This is a deep file" {
+		t.Error("Index 1 has the wrong child.")
+	}
 }
