@@ -18,7 +18,6 @@ type jsonResponse struct {
 
 func getPage(env *util.Env, uri string, w http.ResponseWriter, req *http.Request) {
 	page, err := env.DB.GetPage(uri)
-
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(&jsonResponse{
@@ -36,7 +35,6 @@ func getPage(env *util.Env, uri string, w http.ResponseWriter, req *http.Request
 
 func getMenu(env *util.Env, uri string, w http.ResponseWriter, req *http.Request) {
 	menu, err := env.DB.GetMenu()
-
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(&jsonResponse{
@@ -54,7 +52,6 @@ func getMenu(env *util.Env, uri string, w http.ResponseWriter, req *http.Request
 
 func search(env *util.Env, search string, uri string, w http.ResponseWriter, req *http.Request) {
 	menu, err := env.DB.Search(search)
-
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(&jsonResponse{
@@ -75,6 +72,8 @@ func Listen(env *util.Env) {
 	stripSlashes := regexp.MustCompile("^\\/|\\/$|\\?.*$")
 	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 		s := req.URL.Query().Get("q")
 		uri := stripSlashes.ReplaceAllString(req.RequestURI, "")
 		if uri == "menu" {

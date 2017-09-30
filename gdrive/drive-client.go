@@ -67,6 +67,16 @@ func tokenCacheFile() (string, error) {
 		url.QueryEscape("drive-go-quickstart.json")), err
 }
 
+// RemoveCacheFile will remove the credentials.
+func RemoveCacheFile() error {
+	usr, err := user.Current()
+	if err != nil {
+		return err
+	}
+	tokenCacheDir := filepath.Join(usr.HomeDir, ".credentials")
+	return os.RemoveAll(tokenCacheDir)
+}
+
 // tokenFromFile retrieves a Token from a given file path.
 // It returns the retrieved Token and any read error encountered.
 func tokenFromFile(file string) (*oauth2.Token, error) {
@@ -94,12 +104,11 @@ func saveToken(file string, token *oauth2.Token) {
 
 // DriveClient sets up the authentication for drive by retreiving the access
 // token.
-func DriveClient() *Client {
+func DriveClient(clientSecret string) *Client {
 	ctx := context.Background()
-
-	b, err := ioutil.ReadFile("client_secret.json")
+	b, err := ioutil.ReadFile(clientSecret)
 	if err != nil {
-		log.Fatalf("Unable to read client secret file: %v", err)
+		log.Fatalf("Unable to read client secret file: '%v': %v", clientSecret, err)
 	}
 
 	// If modifying these scopes, delete your previously saved credentials

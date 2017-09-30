@@ -1,3 +1,4 @@
 .DS_Store
 vendor/
 client_secret.json
+creds.sh

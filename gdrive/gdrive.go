@@ -9,9 +9,10 @@ import (
 	"strings"
 	"sync"
 
+	blackfriday "gopkg.in/russross/blackfriday.v2"
+
 	"github.com/LevInteractive/allwrite-docs/model"
 	"github.com/LevInteractive/allwrite-docs/util"
-	"github.com/russross/blackfriday"
 )
 
 const parentDir string = "0B4pmjFk2yyz2NFcwZzQwVHlCRWc"
@@ -99,7 +100,7 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 	defer pages.wg.Done()
 
 	r, err := client.Service.Files.List().
-		PageSize(1000). // OK for now.
+		PageSize(1000). // OK for now. Right?
 		Q("'" + parentID + "' in parents").
 		Do()
 
@@ -188,8 +189,7 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 }
 
 // UpdateMenu triggers the database to sync with the content.
-func UpdateMenu(env *util.Env) error {
-	client := DriveClient()
+func UpdateMenu(client *Client, env *util.Env) error {
 	var wg sync.WaitGroup
 	p := &pages{wg: &wg}
 	p.wg.Add(1)
