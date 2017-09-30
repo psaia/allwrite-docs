@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"regexp"
 
-	"github.com/LevInteractive/allwrite-docs/model"
 	"github.com/LevInteractive/allwrite-docs/util"
 )
 
@@ -17,15 +16,8 @@ type jsonResponse struct {
 	Error  string      `json:"error"`
 }
 
-// SortPages sorts the pages in the proper heirarchy.
-func SortPages(pages []*model.Page) []*model.Page {
-	return pages
-}
-
 func getPage(env *util.Env, uri string, w http.ResponseWriter, req *http.Request) {
 	page, err := env.DB.GetPage(uri)
-
-	w.Header().Set("Content-Type", "application/json")
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -42,32 +34,57 @@ func getPage(env *util.Env, uri string, w http.ResponseWriter, req *http.Request
 	}
 }
 
-// func getMenu(uri string, w http.ResponseWriter, req *http.Request) {
-// 	rows, err := db.Query("SELECT name FROM users WHERE age=?", age)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	defer rows.Close()
-// 	for rows.Next() {
-// 		var name string
-// 		if err := rows.Scan(&name); err != nil {
-// 			log.Fatal(err)
-// 		}
-// 		fmt.Printf("%s is %d\n", name, age)
-// 	}
-// 	if err := rows.Err(); err != nil {
-// 		log.Fatal(err)
-// 	}
-// }
+func getMenu(env *util.Env, uri string, w http.ResponseWriter, req *http.Request) {
+	menu, err := env.DB.GetMenu()
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(&jsonResponse{
+			Code:  http.StatusBadRequest,
+			Error: err.Error(),
+		})
+	} else {
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(jsonResponse{
+			Code:   http.StatusOK,
+			Result: menu,
+		})
+	}
+}
+
+func search(env *util.Env, search string, uri string, w http.ResponseWriter, req *http.Request) {
+	menu, err := env.DB.Search(search)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(&jsonResponse{
+			Code:  http.StatusBadRequest,
+			Error: err.Error(),
+		})
+	} else {
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(jsonResponse{
+			Code:   http.StatusOK,
+			Result: menu,
+		})
+	}
+}
 
 // Listen to incoming requests and serve.
 func Listen(env *util.Env) {
-	stripSlashes := regexp.MustCompile("^\\/|\\/$")
+	stripSlashes := regexp.MustCompile("^\\/|\\/$|\\?.*$")
 	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		s := req.URL.Query().Get("q")
 		uri := stripSlashes.ReplaceAllString(req.RequestURI, "")
-		if uri == "/menu" {
-			// getMenu(uri, w, req)
+		if uri == "menu" {
+			fmt.Printf("Request: Menu\n")
+			getMenu(env, uri, w, req)
+		} else if len(s) > 0 && uri == "" {
+			fmt.Printf("Request: Search - %s\n", s)
+			search(env, s, uri, w, req)
 		} else {
+			fmt.Printf("Request: Get Page - %s\n", uri)
 			getPage(env, uri, w, req)
 		}
 	})

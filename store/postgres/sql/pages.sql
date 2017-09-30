@@ -8,7 +8,8 @@ CREATE TABLE pages (
   updated     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   title       TEXT,
   slug        TEXT NOT NULL,
-  md          TEXT
+  md          TEXT,
+  html        TEXT
 );
 
 CREATE INDEX slug_idx ON pages (slug);

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 
 	"github.com/LevInteractive/allwrite-docs/model"
 
@@ -27,10 +28,10 @@ func (p *Store) SavePages(pages model.Pages) (model.Pages, error) {
 		return pages, err
 	}
 	stmt, err := tx.Prepare(`
-		INSERT INTO pages (doc_id, type, title, slug, md, placement)
-		VALUES ($1, $2, $3, $4, $5, $6)
+		INSERT INTO pages (doc_id, type, title, slug, md, html, placement)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
 		ON CONFLICT (doc_id)
-		DO UPDATE set (type, title, slug, md, placement) = ($2, $3, $4, $5, $6)
+		DO UPDATE set (type, title, slug, md, html, placement) = ($2, $3, $4, $5, $6, $7)
 		WHERE pages.doc_id = $1
 	`)
 
@@ -49,6 +50,7 @@ func (p *Store) SavePages(pages model.Pages) (model.Pages, error) {
 			page.Name,
 			page.Slug,
 			page.Md,
+			page.HTML,
 			page.Order,
 		); err != nil {
 			tx.Rollback()
@@ -76,17 +78,20 @@ func (p *Store) RemoveAll() error {
 // GetPage saves a page.
 func (p *Store) GetPage(slug string) (*model.Page, error) {
 	stmt := `
-	SELECT doc_id, type, title, slug, md, placement
+	SELECT doc_id, created, updated, type, title, slug, md, html, placement
 	FROM pages
-	WHERE slug = $1 AND type = "file"`
+	WHERE slug = $1 AND type = 'file'`
 	var page model.Page
 
 	err := p.driver.QueryRow(stmt, slug).Scan(
 		&page.DocID,
+		&page.Created,
+		&page.Updated,
 		&page.Type,
 		&page.Name,
 		&page.Slug,
 		&page.Md,
+		&page.HTML,
 		&page.Order,
 	)
 
@@ -102,12 +107,71 @@ func (p *Store) GetPage(slug string) (*model.Page, error) {
 
 // GetMenu retrieves the full menu tree.
 func (p *Store) GetMenu() ([]*model.PageFragment, error) {
-	return nil, nil
+	rows, err := p.driver.Query(`
+		SELECT title, type, placement, created, updated, slug
+		FROM pages
+	`)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var records model.Fragments
+	for rows.Next() {
+		record := &model.PageFragment{}
+		err := rows.Scan(
+			&record.Name,
+			&record.Type,
+			&record.Order,
+			&record.Created,
+			&record.Updated,
+			&record.Slug,
+		)
+		if err != nil {
+			log.Fatal(err)
+		}
+		records = append(records, record)
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return model.PageTree(records), nil
 }
 
 // Search searches a page.
 func (p *Store) Search(q string) ([]*model.PageFragment, error) {
-	return nil, nil
+	rows, err := p.driver.Query(`
+		SELECT title, type, placement, created, updated, slug
+		FROM pages
+		WHERE to_tsvector(md || title) @@ plainto_tsquery('english', $1)
+	`, q)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var records model.Fragments
+	for rows.Next() {
+		record := &model.PageFragment{}
+		err := rows.Scan(
+			&record.Name,
+			&record.Type,
+			&record.Order,
+			&record.Created,
+			&record.Updated,
+			&record.Slug,
+		)
+		if err != nil {
+			log.Fatal(err)
+		}
+		records = append(records, record)
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return records, nil
 }
 
 // Init connection with postgres.

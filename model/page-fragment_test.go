@@ -15,38 +15,38 @@ import (
 //  Only one deep       | file | another-sub-directory                    |         0
 //  This is a deep file | file | another-sub-directory/a-deeper-directory |         0
 
-var items = Pages{
-	&Page{
+var items = Fragments{
+	&PageFragment{
 		Order: 3,
 		Name:  "Images!",
 		Type:  "file",
 		Slug:  "images",
 	},
-	&Page{
+	&PageFragment{
 		Order: 0,
 		Name:  "Homepage",
 		Type:  "file",
 		Slug:  "",
 	},
-	&Page{
+	&PageFragment{
 		Order: 2,
 		Name:  "A Sub Directory",
 		Type:  "dir",
 		Slug:  "a-sub-directory",
 	},
-	&Page{
+	&PageFragment{
 		Order: 1,
 		Name:  "How to be a friend",
 		Type:  "file",
 		Slug:  "a-sub-directory/how-to-be-a-friend",
 	},
-	&Page{
+	&PageFragment{
 		Order: 1,
 		Name:  "Only one deep",
 		Type:  "file",
 		Slug:  "another-sub-directory",
 	},
-	&Page{
+	&PageFragment{
 		Order: 0,
 		Name:  "This is a deep file",
 		Type:  "file",

@@ -11,6 +11,7 @@ import (
 
 	"github.com/LevInteractive/allwrite-docs/model"
 	"github.com/LevInteractive/allwrite-docs/util"
+	"github.com/russross/blackfriday"
 )
 
 const parentDir string = "0B4pmjFk2yyz2NFcwZzQwVHlCRWc"
@@ -122,13 +123,12 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 			}
 
 			// Define the page that will be saved.
-			newPage := &model.Page{
-				Name:    parts.Title,
-				DocID:   i.Id,
-				Order:   parts.Order,
-				Created: i.CreatedTime,
-				Updated: i.ModifiedTime,
-			}
+			newPage := &model.Page{}
+			newPage.Name = parts.Title
+			newPage.DocID = i.Id
+			newPage.Order = parts.Order
+			newPage.Created = i.CreatedTime
+			newPage.Updated = i.ModifiedTime
 
 			// Switch depending on type of ducment.
 			switch mime := i.MimeType; mime {
@@ -145,6 +145,7 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 				}
 
 				newPage.Md = md
+				newPage.HTML = string(blackfriday.Run([]byte(md)))
 				newPage.Type = "file"
 
 				if parts.Order == 0 {
