@@ -14,7 +14,7 @@ This is not a SaaS product and 100% open source.
 * Images are directly referenced from Google so you don't need to worry about image storage.
 * No dependencies other than Postgres.
 * URL structure builds itself based on the directory structure.
-* Did I mention is crazy fast since pages are pre-cached?
+* Did I mention that it's crazy fast since pages are pre-cached?
 
 # Table of Contents
 
