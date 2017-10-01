@@ -65,9 +65,33 @@ Coming soon.
 
 ## Installation
 
-* The Go App
-* Docker image
-* Other quick and easy installation methods.
+```bash
+# Install allwrite-docs executable (/usr/local/bin/allwrite-docs).
+curl -L https://github.com/LevInteractive/allwrite-docs/blob/master/install.sh?raw=true | sh
+
+# Import database schema. Note, you'll need to have postgres setup and know what
+# your username and password is.
+curl -O https://raw.githubusercontent.com/LevInteractive/allwrite-docs/master/store/postgres/sql/pages.sql
+psql < pages.sql
+
+# Download the environmental variables. These need to available to the
+# user/shell so allwrite can connect.
+curl https://raw.githubusercontent.com/LevInteractive/allwrite-docs/master/creds.example.sh > creds
+
+# Configure.
+vim creds
+
+# Put the vars in your shell.
+source creds
+
+# Authenticate with google Drive. You'll be prompted to click a link and copy
+# and paste a code back in the terminal.
+allwrite setup
+
+# Run the server. You'll eventually want to run this in the background and use
+# something like nginx to create a reverse proxy.
+allwrite start
+```
 
 ## API
 
