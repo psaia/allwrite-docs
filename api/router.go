@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"regexp"
@@ -71,23 +70,23 @@ func search(env *util.Env, search string, uri string, w http.ResponseWriter, req
 func Listen(env *util.Env) {
 	stripSlashes := regexp.MustCompile("^\\/|\\/$|\\?.*$")
 	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 		s := req.URL.Query().Get("q")
 		uri := stripSlashes.ReplaceAllString(req.RequestURI, "")
 		if uri == "menu" {
-			fmt.Printf("Request: Menu\n")
+			log.Printf("Request: Menu\n")
 			getMenu(env, uri, w, req)
 		} else if len(s) > 0 && uri == "" {
-			fmt.Printf("Request: Search - %s\n", s)
+			log.Printf("Request: Search - %s\n", s)
 			search(env, s, uri, w, req)
 		} else {
-			fmt.Printf("Request: Get Page - %s\n", uri)
+			log.Printf("Request: Get Page - %s\n", uri)
 			getPage(env, uri, w, req)
 		}
 	})
 
-	fmt.Printf("\nListening on %s\n", env.CFG.Port)
+	log.Printf("\nListening on %s\n", env.CFG.Port)
 	log.Fatal(http.ListenAndServe(env.CFG.Port, nil))
 }
