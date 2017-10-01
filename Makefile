@@ -1,6 +1,4 @@
-# Replace demo with your desired executable name
 appname := allwrite-docs
-
 sources := $(wildcard *.go)
 
 build = GOOS=$(1) GOARCH=$(2) go build -o build/$(appname)$(3)

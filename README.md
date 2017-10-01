@@ -65,8 +65,6 @@ Coming soon.
 
 ## Installation
 
-TODO:
-
 * The Go App
 * Docker image
 * Other quick and easy installation methods.

@@ -9,7 +9,7 @@ type Conf struct {
 	ActiveDir        string `env:"ACTIVE_DIR,required"`
 	StoreType        string `env:"STORAGE,required"`
 	ClientSecret     string `env:"CLIENT_SECRET,required"`
-	Frequency        string `env:"FREQUENCY,required"`
+	Frequency        int    `env:"FREQUENCY,required"`
 	Port             string `env:"PORT,required"`
 	PostgresUser     string `env:"PG_USER"`
 	PostgresPassword string `env:"PG_PASS"`

@@ -4,10 +4,12 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	blackfriday "gopkg.in/russross/blackfriday.v2"
 
@@ -189,7 +191,8 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 }
 
 // UpdateMenu triggers the database to sync with the content.
-func UpdateMenu(client *Client, env *util.Env) error {
+func UpdateMenu(client *Client, env *util.Env) {
+	log.Printf("Checking for Drive updates.")
 	var wg sync.WaitGroup
 	p := &pages{wg: &wg}
 	p.wg.Add(1)
@@ -207,10 +210,20 @@ func UpdateMenu(client *Client, env *util.Env) error {
 	p.collection = consolidate(p.collection)
 
 	if err := env.DB.RemoveAll(); err != nil {
-		return err
+		log.Fatalf("There was an error removing previous records: %s", err.Error())
+		return
 	}
 	if _, err := env.DB.SavePages(p.collection); err != nil {
-		return err
+		log.Fatalf("There was an error saving records: %s", err.Error())
+		return
 	}
-	return nil
+}
+
+// WatchDrive will check for updates based on Frequency.
+func WatchDrive(client *Client, env *util.Env) {
+	pull := func() {
+		UpdateMenu(client, env)
+	}
+	util.SetInterval(pull, time.Duration(env.CFG.Frequency)*time.Millisecond)
+	pull()
 }
