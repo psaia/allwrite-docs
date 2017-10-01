@@ -14,7 +14,7 @@ type PageFragment struct {
 	Order    int             `json:"order"`
 	Updated  string          `json:"updated"`
 	Created  string          `json:"created"`
-	Children []*PageFragment `json:"children"`
+	Children []*PageFragment `json:"children,omitempty"`
 }
 
 // Fragments is a slice of frags.

@@ -13,7 +13,7 @@ import (
 type jsonResponse struct {
 	Code   int         `json:"code"`
 	Result interface{} `json:"result"`
-	Error  string      `json:"error"`
+	Error  string      `json:"error,omitempty"`
 }
 
 func getPage(env *util.Env, uri string, w http.ResponseWriter, req *http.Request) {

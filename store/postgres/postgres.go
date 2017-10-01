@@ -81,7 +81,7 @@ func (p *Store) GetPage(slug string) (*model.Page, error) {
 	SELECT doc_id, created, updated, type, title, slug, md, html, placement
 	FROM pages
 	WHERE slug = $1 AND type = 'file'`
-	var page model.Page
+	page := model.Page{}
 
 	err := p.driver.QueryRow(stmt, slug).Scan(
 		&page.DocID,

@@ -1,12 +1,10 @@
 # Allwrite Docs
 
-**Currently in development**
-
-Writing in Google Drive is enjoyable. When something is enjoyable and accessible, we tend to do it more often and with better quality.
+An incredibly fast API server powered by Google Drive written purely in Go.
 
 This API connects with your Google Drive and provides RESTful endpoints which return the pages within Drive in a organized and usable format. With this API, beautiful (or ugly) user interfaces can be created and reused anywhere you need to display documentation online.
 
-This is not a SaaS product and 100% open source. You just need to host it yourself.
+This is not a SaaS product and 100% open source.
 
 # Table of Contents
 
@@ -16,6 +14,7 @@ This is not a SaaS product and 100% open source. You just need to host it yourse
 * [Themes](#themes)
 * [Installation](#installation)
 * [API](#api)
+* [CLI](#cli)
 
 ## Workflow
 
@@ -93,63 +92,119 @@ allwrite setup
 allwrite start
 ```
 
+
 ## API
 
 There are three endpoints.
+
+* /:slug
+* /menu
+* /?s=any+escaped+string
 
 #### GET /menu
 
 Returns a collection of page fragments.
 
 ```json
-[
-  {
-    "name": "Getting Start",
-    "slug": "getting-started",
-    "updated": 1500057521,
-    "children": []
-  },
-  {
-    "name": "Configure",
-    "slug": false,
-    "updated": 1500057521,
-    "children": [
-      {
-        "name": "Hello World",
-        "slug": "configure/hello-world",
-        "updated": 1500057521,
-        "children": []
-      }
-    ]
-  }
-]
-```
-
-#### GET /page(/:slug)
-
-Pull a page based on its slug. If not provided, `|0|` page will be used. Page fragments will be included as children if they exist.
-
-```json
 {
-  "name": "Configure",
-  "slug": "configure",
-  "updated": 1500057521,
-  "html": "<html here>",
-  "md": "<markdown here>",
-  "children": [
+  "code":200,
+  "result":[
     {
-      "name": "Hello World",
-      "slug": "configure/hello-world",
-      "updated": 1500057521,
-      "children": []
-     }
+      "name":"Homepage",
+      "type":"file",
+      "slug":"",
+      "order":0,
+      "updated":"2017-09-30T23:35:31.663365Z",
+      "created":"2017-09-30T23:35:31.663365Z"
+    },
+    {
+      "name":"Only one deep",
+      "type":"file",
+      "slug":"another-sub-directory",
+      "order":0,
+      "updated":"2017-09-30T23:35:31.663365Z",
+      "created":"2017-09-30T23:35:31.663365Z",
+      "children":[
+        {
+          "name":"This is a deep file",
+          "type":"file",
+          "slug":"another-sub-directory/a-deeper-directory",
+          "order":0,
+          "updated":"2017-09-30T23:35:31.663365Z",
+          "created":"2017-09-30T23:35:31.663365Z"
+        }
+      ]
+    },
+    {
+      "name":"A Sub Directory",
+      "type":"dir",
+      "slug":"a-sub-directory",
+      "order":1,
+      "updated":"2017-09-30T23:35:31.663365Z",
+      "created":"2017-09-30T23:35:31.663365Z",
+      "children":[
+        {
+          "name":"How to be a friend",
+          "type":"file",
+          "slug":"a-sub-directory/how-to-be-a-friend",
+          "order":1,
+          "updated":"2017-09-30T23:35:31.663365Z",
+          "created":"2017-09-30T23:35:31.663365Z"
+        }
+      ]
+    },
+    {
+      "name":"Images!",
+      "type":"file",
+      "slug":"images",
+      "order":2,
+      "updated":"2017-09-30T23:35:31.663365Z",
+      "created":"2017-09-30T23:35:31.663365Z"
+    }
   ]
 }
 ```
 
-#### GET /search/:q
+#### GET /page(/:slug)
+
+Pull a page based on its slug. If not provided, `|0|` page will be used.
+
+```json
+{
+  "code":200,
+  "result":{
+    "name":"Homepage",
+    "type":"file",
+    "slug":"",
+    "order":0,
+    "updated":"2017-09-30T23:21:35.044194Z",
+    "created":"2017-09-30T23:21:35.044194Z",
+    "doc_id":"1V5G8XmX6ggLVu09QJXqONQkLKfIix-2bMuefFYbmTmE",
+    "html":"[full clean html]",
+    "md":"[full clean markdown]"
+  }
+}
+```
+
+#### GET /?q=my+search
 
 This will search for results based on your q parameter. The string needs to be URL encoded.
+
+```json
+{
+    "code": 200,
+    "result": [
+        {
+            "name": "This is a deep file",
+            "type": "file",
+            "slug": "another-sub-directory/a-deeper-directory",
+            "order": 0,
+            "updated": "2017-09-30T23:35:31.663365Z",
+            "created": "2017-09-30T23:35:31.663365Z"
+        }
+    ]
+}
+```
 
 #### Page not found
 
@@ -157,7 +212,38 @@ If a page is not found, an error will be returned with error code `404`.
 
 ```json
 {
-  "status": 404,
-  "message": "We're sorry, but the page you were looking for could not be found."
+  "code":400,
+  "result":null,
+  "error":"not found"
 }
 ```
+
+## CLI
+
+After installing, you'll have access to the API.
+
+$ allwrite-docs
+
+```
+NAME:
+   Allwrite Docs | Publish your documentation with Drive. - A new cli application
+
+USAGE:
+   allwrite-docs [global options] command [command options] [arguments...]
+
+VERSION:
+   0.0.1
+
+COMMANDS:
+     start, s  Start the server in the foreground. This will authenticate with Google if it's the first time you're running.
+     setup     Only authenticate with Google and do not run the allwrite server.
+     pull, p   Pull the latest content from Google Drive.
+     reset, r  Reset any saved authentication credentials for Google. You will need to re-authenticate after doing this.
+     info, i   Display environmental variables. Useful for making sure everything is setup correctly.
+     help, h   Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --help, -h     show help
+   --version, -v  print the version
+```
+
