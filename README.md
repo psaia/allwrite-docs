@@ -1,10 +1,20 @@
 # Allwrite Docs
 
-An incredibly fast API server powered by Google Drive written purely in Go.
+An incredibly fast documentation API powered by Google Drive written purely in Go.
 
 This API connects with your Google Drive and provides RESTful endpoints which return the pages within Drive in a organized and usable format. With this API, beautiful (or ugly) user interfaces can be created and reused anywhere you need to display documentation online.
 
 This is not a SaaS product and 100% open source.
+
+**Features:**
+
+* Let anyone, technical or not, contribute to documentation.
+* Full-text search.
+* Transforms Google docs to clean markdown and html.
+* Images are directly referenced from Google so you don't need to worry about image storage.
+* No dependencies other than Postgres.
+* URL structure builds itself based on the directory structure.
+* Did I mention is crazy fast since pages are pre-cached?
 
 # Table of Contents
 
@@ -56,13 +66,22 @@ Formatting guide:
 
 ## Examples
 
-Coming soon.
+* [stackahoy.io](https://stackahoy.io) is going to use it.
 
 ## Themes
 
-Coming soon.
+Themes are coming soon. Priorities:
+
+* SEO capable (isomorphic)
+* Low dependency if any.
+* Super fast.
+* Beautiful.
 
 ## Installation
+
+First, you should generate a OAuth 2.0 json file [here](https://console.developers.google.com/projectselector/apis/credentials). Select
+"other" for Application Type then place the client_secret.json file on the
+server you'll be running the API.
 
 ```bash
 # Install allwrite-docs executable (/usr/local/bin/allwrite-docs).
@@ -77,15 +96,11 @@ psql < pages.sql
 # user/shell so allwrite can connect.
 curl https://raw.githubusercontent.com/LevInteractive/allwrite-docs/master/creds.example.sh > creds
 
-# Configure.
+# Configure. Make sure these variables are correct.
 vim creds
 
-# Put the vars in your shell.
+# Load the variables.
 source creds
-
-# Authenticate with google Drive. You'll be prompted to click a link and copy
-# and paste a code back in the terminal.
-allwrite setup
 
 # Run the server. You'll eventually want to run this in the background and use
 # something like nginx to create a reverse proxy.
@@ -220,7 +235,7 @@ If a page is not found, an error will be returned with error code `404`.
 
 ## CLI
 
-After installing, you'll have access to the API.
+After installing, you'll have access to the CLI
 
 $ allwrite-docs
 
