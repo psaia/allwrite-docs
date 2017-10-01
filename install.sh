@@ -6,18 +6,18 @@ ARCH=$(uname -m)
 if [ $KERNEL = "Darwin" ]
 then
 	BINARY="https://github.com/LevInteractive/allwrite-docs/blob/master/build/darwin_amd64.tar.gz?raw=true"
-elif [ $Nucleo = "Linux" ]
+elif [ $KERNEL = "Linux" ]
 then
-	if [$ARCH = "x86_64"]
+	if [ $ARCH = "x86_64" ]
 	then
 		BINARY="https://github.com/LevInteractive/allwrite-docs/blob/master/build/linux_amd64.tar.gz?raw=true"
-	elif [$ARCH = "x86"]
+	elif [ $ARCH = "x86" ]
 	then
 		BINARY="https://github.com/LevInteractive/allwrite-docs/blob/master/build/linux_386.tar.gz?raw=true"
 	elif [ $ARCH = "i386" ]
 	then
 		BINARY="https://github.com/LevInteractive/allwrite-docs/blob/master/build/linux_386.tar.gz?raw=true"
-	elif [$ARCH = "i686"]
+	elif [ $ARCH = "i686" ]
 	then
 		BINARY="https://github.com/LevInteractive/allwrite-docs/blob/master/build/linux_386.tar.gz?raw=true"
 	else
