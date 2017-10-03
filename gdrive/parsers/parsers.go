@@ -3,6 +3,7 @@ package parsers
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"regexp"
 	"strings"
 
@@ -48,24 +49,25 @@ func FormatStyle(css string, content string) string {
 	content = strings.Replace(content, "“", "\"", -1)
 	content = strings.Replace(content, "”", "\"", -1)
 
-	if linkRegexp.Match([]byte(css)) {
-		result := linkRegexp.FindStringSubmatch(css)
-		if len(result) == 2 {
-			content = fmt.Sprintf("[%s](%s)", content, result[1])
-		} else {
-			fmt.Println("Could not find link! " + css)
-		}
-	}
-
 	if imgRegexp.Match([]byte(css)) {
 		result := imgRegexp.FindStringSubmatch(css)
 		if len(result) == 2 {
 			parts := strings.Split(result[1], "∏")
 			content = fmt.Sprintf("![%s](%s)", parts[0], parts[1])
 		} else {
-			fmt.Println("Could not find alt and src from image! " + css)
+			log.Println("Could not find alt and src from image! " + css)
 		}
 	}
+
+	if linkRegexp.Match([]byte(css)) {
+		result := linkRegexp.FindStringSubmatch(css)
+		if len(result) == 2 {
+			content = fmt.Sprintf("[%s](%s)", content, result[1])
+		} else {
+			log.Println("Could not find link! " + css)
+		}
+	}
+
 	return content
 }
 
@@ -92,10 +94,14 @@ func InlineWalker(b *bytes.Buffer, n *html.Node, parentCSS string) {
 				styles += "___LINKΔΔΔ" + GetAttr(c.Attr, "href") + "ΔΔΔ___"
 			}
 
+			// If at an image, there is no reason to go deeper in since nothing can go
+			// in a image tag. Just write it out.
 			if c.DataAtom.String() == "img" {
 				alt := GetAttr(c.Attr, "alt")
 				src := GetAttr(c.Attr, "src")
 				styles += "___IMGΔΔΔ" + alt + "∏" + src + "ΔΔΔ___"
+				b.WriteString(FormatStyle(styles, c.Data))
+				return
 			}
 
 			InlineWalker(b, c, styles)

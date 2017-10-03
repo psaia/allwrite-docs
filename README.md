@@ -70,12 +70,8 @@ Formatting guide:
 
 ## Themes
 
-Themes are coming soon. Priorities:
-
-* SEO capable (isomorphic)
-* Low dependency if any.
-* Super fast.
-* Beautiful.
+* [Spartan](https://github.com/LevInteractive/spartan-allwrite/)
+* Make your own!
 
 ## Installation
 

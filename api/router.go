@@ -73,6 +73,7 @@ func Listen(env *util.Env) {
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+		w.Header().Set("Cache-Control", "public, max-age=3600")
 		s := req.URL.Query().Get("q")
 		uri := stripSlashes.ReplaceAllString(req.RequestURI, "")
 		if uri == "menu" {
