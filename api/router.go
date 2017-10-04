@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"regexp"
@@ -76,10 +77,11 @@ func Listen(env *util.Env) {
 		w.Header().Set("Cache-Control", "public, max-age=3600")
 		s := req.URL.Query().Get("q")
 		uri := stripSlashes.ReplaceAllString(req.RequestURI, "")
+		fmt.Printf(req.RequestURI)
 		if uri == "menu" {
 			log.Printf("Request: Menu\n")
 			getMenu(env, uri, w, req)
-		} else if len(s) > 0 && uri == "" {
+		} else if len(s) > 0 && uri == "" || req.RequestURI == "/?q=" {
 			log.Printf("Request: Search - %s\n", s)
 			search(env, s, uri, w, req)
 		} else {

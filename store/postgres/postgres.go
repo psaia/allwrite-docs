@@ -142,9 +142,22 @@ func (p *Store) GetMenu() ([]*model.PageFragment, error) {
 // Search searches a page.
 func (p *Store) Search(q string) ([]*model.PageFragment, error) {
 	rows, err := p.driver.Query(`
-		SELECT title, type, placement, created, updated, slug
-		FROM pages
-		WHERE to_tsvector(md || title) @@ plainto_tsquery('english', $1)
+		SELECT
+			title,
+			type,
+			placement,
+			created,
+			updated,
+			slug,
+			ts_headline(
+				regexp_replace(concat(' ', title, html), E'[\\n\\r]+', ' ', 'g'),
+				q
+			) as reltext
+		FROM (
+			SELECT title, type, placement, created, updated, slug, q, html
+			FROM pages, plainto_tsquery('english', $1) q
+			WHERE to_tsvector(title) || to_tsvector(html) @@ q
+		) AS sub;
 	`, q)
 
 	if err != nil {
@@ -161,6 +174,7 @@ func (p *Store) Search(q string) ([]*model.PageFragment, error) {
 			&record.Created,
 			&record.Updated,
 			&record.Slug,
+			&record.MatchingText,
 		)
 		if err != nil {
 			log.Fatal(err)

@@ -8,12 +8,17 @@ import (
 
 // PageFragment is a simple version of a page.
 type PageFragment struct {
-	Name     string          `json:"name"`
-	Type     string          `json:"type"`
-	Slug     string          `json:"slug"`
-	Order    int             `json:"order"`
-	Updated  string          `json:"updated"`
-	Created  string          `json:"created"`
+	Name    string `json:"name"`
+	Type    string `json:"type"`
+	Slug    string `json:"slug"`
+	Order   int    `json:"order"`
+	Updated string `json:"updated"`
+	Created string `json:"created"`
+
+	// Only populated on search results.
+	MatchingText string `json:"reltext,omitempty"`
+
+	// Children on only populated when querying the menu.
 	Children []*PageFragment `json:"children,omitempty"`
 }
 
