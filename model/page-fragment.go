@@ -1,10 +1,12 @@
 package model
 
 import (
-	"regexp"
 	"sort"
 	"strings"
 )
+
+// Fragments is a slice of frags.
+type Fragments []*PageFragment
 
 // PageFragment is a simple version of a page.
 type PageFragment struct {
@@ -19,11 +21,8 @@ type PageFragment struct {
 	MatchingText string `json:"reltext,omitempty"`
 
 	// Children on only populated when querying the menu.
-	Children []*PageFragment `json:"children,omitempty"`
+	Children Fragments `json:"children,omitempty"`
 }
-
-// Fragments is a slice of frags.
-type Fragments []*PageFragment
 
 // ByOrder will sort by order.
 type ByOrder Fragments
@@ -40,57 +39,87 @@ func (slice ByOrder) Swap(i, j int) {
 	slice[i], slice[j] = slice[j], slice[i]
 }
 
-// Only match the end of the slug: /foo/bar(/last)
-var endPattern = regexp.MustCompile("\\/[^/]*$")
-
-// Recursively fill children and order. This could be a little more elegant and
-// performant I think.
-func getChildrenForPageBySlug(curPage *PageFragment, pages Fragments) Fragments {
-	slug := curPage.Slug
-	children := make([]*PageFragment, 0, len(pages))
-	for idx, page := range pages {
-		b := endPattern.ReplaceAllString(page.Slug, "")
-		if b == slug && page != curPage {
-			pagesNext := make(Fragments, len(pages))
-			copy(pagesNext, pages)
-			sort.Sort(ByOrder(pagesNext))
-			pagesNext = append(pagesNext[:idx], pagesNext[idx+1:]...)
-			children = append(children, &PageFragment{
-				Name:     page.Name,
-				Slug:     page.Slug,
-				Order:    page.Order,
-				Type:     page.Type,
-				Updated:  page.Updated,
-				Created:  page.Created,
-				Children: getChildrenForPageBySlug(curPage, pagesNext),
-			})
+func compareSlices(a []string, b []string) int {
+	n, aLen, bLen := 0, len(a), len(b)
+	for i := range a {
+		if i < aLen && i < bLen && a[i] == b[i] {
+			n++
 		}
 	}
-	return children
+	return n
 }
 
-// PageTree takes in a collection of pages and sorts them by order and populates the
-// children slice.
+func appendDeep(
+	master Fragments,
+	prevSibling *Fragments,
+	prev *PageFragment,
+	next *PageFragment,
+) (
+	Fragments,
+	*Fragments,
+	*PageFragment,
+) {
+	prevSegs := strings.Split(prev.Slug, "/")
+	nextSegs := strings.Split(next.Slug, "/")
+	diff := compareSlices(prevSegs, nextSegs)
+	var siblings *Fragments
+
+	// These comments are super helpful when debugging. Leaving commented out.
+	if len(prevSegs) == diff {
+		// log.Printf("Adding child '%s' to parent '%s' -- diff: %v", next.Name, prev.Name, diff)
+		prev.Children = append(prev.Children, next)
+		siblings = &prev.Children
+	} else if diff > 0 {
+		// log.Printf("Adding sibling: '%s' along side '%s'", next.Name, prev.Name)
+		*prevSibling = append(*prevSibling, next)
+		siblings = prevSibling
+	} else {
+		// log.Printf("Adding top level: %s -- diff: %v", next.Name, diff)
+		master = append(master, next)
+		siblings = &master
+	}
+
+	sort.Sort(ByOrder(master))
+	sort.Sort(ByOrder(*siblings))
+
+	return master, siblings, next
+}
+
+// PageTree takes in an ordered collection of pages and sorts them by order and
+// populates the children slice. These must be ordered by slug.
+//
+// For example:
+//
+//         title         |                     slug
+// ----------------------+----------------------------------------------
+//  Welcome              |
+//  First Page           | getting-started
+//  Code Snippets        | getting-started/code-snippets
+//  Hello World          | getting-started/hello-world
+//  Section One          | section-one
+//  Moderately Deep File | section-one/moderately-deep-file
+//  Only one deep        | section-two
+//  This is a deep file  | section-two/subsection-one
+//  Subsection Two       | section-two/subsection-two
+//  Deep Page Example    | section-two/subsection-two/deep-page-example
 func PageTree(pages Fragments) Fragments {
-	sort.Sort(ByOrder(pages))
 	master := make(Fragments, 0, len(pages))
 
-	for _, page := range pages {
-		segs := strings.Split(page.Slug, "/")
-		depth := len(segs) - 1
+	// Append the first page to get our master started. Then shift off the first
+	// item of the main pages array. Singlings gets passed by pointer so siblings
+	// can be added to it if need be.
+	master = append(master, pages[0])
+	siblings := &master
+	pages = pages[1:]
 
-		if depth == 0 {
-			frag := &PageFragment{
-				Name:     page.Name,
-				Slug:     page.Slug,
-				Order:    page.Order,
-				Type:     page.Type,
-				Updated:  page.Updated,
-				Created:  page.Created,
-				Children: getChildrenForPageBySlug(page, pages),
-			}
-			master = append(master, frag)
-		}
+	// This is set on each iteration.
+	prev := master[0]
+
+	// Loop through the rest of the pages adding them to the master where they
+	// belong.
+	for _, page := range pages {
+		master, siblings, prev = appendDeep(master, siblings, prev, page)
 	}
+
 	return master
 }

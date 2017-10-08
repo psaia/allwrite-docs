@@ -147,6 +147,7 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 					continue
 				}
 
+				fmt.Println(i)
 				newPage.Md = md
 				newPage.HTML = string(blackfriday.Run([]byte(md)))
 				newPage.Type = "file"

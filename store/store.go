@@ -10,6 +10,14 @@ type Store interface {
 	SavePages(model.Pages) (model.Pages, error)
 	RemoveAll() error
 	GetPage(slug string) (*model.Page, error)
+
+	// The menu must sort by slug ASC.
+	// So:
+	// a
+	// a/b
+	// a/c
+	// b/a
+	// b/c/d
 	GetMenu() ([]*model.PageFragment, error)
 	Search(q string) ([]*model.PageFragment, error)
 }

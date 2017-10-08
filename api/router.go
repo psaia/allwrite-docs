@@ -19,9 +19,9 @@ type jsonResponse struct {
 func getPage(env *util.Env, uri string, w http.ResponseWriter, req *http.Request) {
 	page, err := env.DB.GetPage(uri)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(&jsonResponse{
-			Code:  http.StatusBadRequest,
+			Code:  http.StatusNotFound,
 			Error: err.Error(),
 		})
 	} else {

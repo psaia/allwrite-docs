@@ -110,6 +110,7 @@ func (p *Store) GetMenu() ([]*model.PageFragment, error) {
 	rows, err := p.driver.Query(`
 		SELECT title, type, placement, created, updated, slug
 		FROM pages
+		ORDER BY slug ASC
 	`)
 
 	if err != nil {
