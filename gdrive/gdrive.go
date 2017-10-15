@@ -96,7 +96,7 @@ func consolidate(collection model.Pages) model.Pages {
 func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID string, pages *pages) {
 	r, err := client.Service.Files.List().
 		PageSize(1000). // OK for now. Right?
-		Q("'" + parentID + "' in parents").
+		Q("'" + parentID + "' in parents and trashed=false").
 		Do()
 
 	if err != nil {
