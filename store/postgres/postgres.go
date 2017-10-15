@@ -151,7 +151,7 @@ func (p *Store) Search(q string) ([]*model.PageFragment, error) {
 			updated,
 			slug,
 			ts_headline(
-				regexp_replace(concat(' ', title, html), E'[\\n\\r]+', ' ', 'g'),
+				regexp_replace(html, E'[\\n\\r]+', ' ', 'g'),
 				q
 			) as reltext
 		FROM (

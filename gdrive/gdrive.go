@@ -8,7 +8,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	blackfriday "gopkg.in/russross/blackfriday.v2"
@@ -25,9 +24,7 @@ type titleParts struct {
 }
 
 type pages struct {
-	sync.Mutex
 	collection model.Pages
-	wg         *sync.WaitGroup
 }
 
 // Obtain the contents of a google doc by its ID. This essentially pulls the
@@ -41,10 +38,8 @@ func (client *Client) getContents(id string, mimeType string) ([]byte, error) {
 	return ioutil.ReadAll(res.Body)
 }
 
-// Atomically and safely writes to collection when a page is retrieved.
-func (s *pages) atomicAppendPage(page *model.Page) {
-	s.Lock()
-	defer s.Unlock()
+// Write a new page to the collection.
+func (s *pages) appendPage(page *model.Page) {
 	s.collection = append(s.collection, page)
 }
 
@@ -99,8 +94,6 @@ func consolidate(collection model.Pages) model.Pages {
 
 // Query google and walk its directory structure pulling out files.
 func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID string, pages *pages) {
-	defer pages.wg.Done()
-
 	r, err := client.Service.Files.List().
 		PageSize(1000). // OK for now. Right?
 		Q("'" + parentID + "' in parents").
@@ -164,7 +157,7 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 				}
 
 				fmt.Printf("Saving page \"%s\" with slug \"%s\".\n", newPage.Name, newPage.Slug)
-				pages.atomicAppendPage(newPage)
+				pages.appendPage(newPage)
 
 			case "application/vnd.google-apps.folder":
 				var dirBaseSlug string
@@ -177,11 +170,10 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 				newPage.Type = "dir"
 				newPage.Slug = dirBaseSlug
 				fmt.Printf("Saving directory \"%s\" with slug \"%s\".\n", newPage.Name, newPage.Slug)
-				pages.atomicAppendPage(newPage)
+				pages.appendPage(newPage)
 
-				pages.wg.Add(1)
 				fmt.Printf("Submerging deeper into %s\n", i.Name)
-				go client.processDriveFiles(env, dirBaseSlug, i.Id, pages)
+				client.processDriveFiles(env, dirBaseSlug, i.Id, pages)
 			default:
 				fmt.Printf("Unknown filetype in drive directory: %s\n", mime)
 			}
@@ -194,18 +186,15 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 // UpdateMenu triggers the database to sync with the content.
 func UpdateMenu(client *Client, env *util.Env) {
 	log.Printf("Checking for Drive updates.")
-	var wg sync.WaitGroup
-	p := &pages{wg: &wg}
-	p.wg.Add(1)
+	p := &pages{}
 
-	go client.processDriveFiles(
+	// This needs to be syncrounous so we don't hit the rate limit.
+	client.processDriveFiles(
 		env,
 		"",
 		env.CFG.ActiveDir,
 		p,
 	)
-
-	p.wg.Wait()
 
 	// Loop through and remove any directories that have parent pages.
 	p.collection = consolidate(p.collection)
