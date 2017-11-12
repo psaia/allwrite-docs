@@ -1,11 +1,14 @@
 package api
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"regexp"
+
+	"golang.org/x/crypto/acme/autocert"
 
 	"github.com/LevInteractive/allwrite-docs/util"
 )
@@ -90,6 +93,22 @@ func Listen(env *util.Env) {
 		}
 	})
 
+	if env.CFG.Port == ":443" {
+		certManager := autocert.Manager{
+			Prompt:     autocert.AcceptTOS,
+			HostPolicy: autocert.HostWhitelist(env.CFG.Domain),
+			Cache:      autocert.DirCache("certs"),
+		}
+		server := &http.Server{
+			Addr: ":443",
+			TLSConfig: &tls.Config{
+				GetCertificate: certManager.GetCertificate,
+			},
+		}
+		server.ListenAndServeTLS("", "")
+	} else {
+		log.Fatal(http.ListenAndServe(env.CFG.Port, nil))
+	}
+
 	log.Printf("\nListening on %s\n", env.CFG.Port)
-	log.Fatal(http.ListenAndServe(env.CFG.Port, nil))
 }
