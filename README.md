@@ -8,6 +8,7 @@ This API connects with your Google Drive and provides RESTful endpoints which re
 
 * Let anyone, technical or not, contribute to documentation.
 * Full-text search.
+* Auto-generating SSL via [certbot](https://certbot.eff.org/).
 * Transforms Google docs to clean markdown and html.
 * Images are directly referenced from Google so you don't need to worry about image storage.
 * No dependencies other than Postgres.
