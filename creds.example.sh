@@ -18,11 +18,15 @@ export CLIENT_SECRET="$PWD/client_secret.json"
 # The storage system to use - currently postgres is the only option.
 export STORAGE="postgres"
 export PG_USER="root"
+export PG_PASS="root"
 export PG_DB="allwrite"
 export PG_HOST="localhost"
 
 # Specify the port to run the application on.
 export PORT=":8000"
+
+# Only needed if listening on port 443. Used for certbot.
+export DOMAIN=""
 
 # How often Google is queried for updates specified in milliseconds.
 export FREQUENCY="300000"

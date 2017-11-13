@@ -4,8 +4,6 @@ An incredibly fast documentation API powered by Google Drive written purely in G
 
 This API connects with your Google Drive and provides RESTful endpoints which return the pages within Drive in a organized and usable format. With this API, beautiful (or ugly) user interfaces can be created and reused anywhere you need to display documentation online.
 
-This is not a SaaS product and 100% open source.
-
 **Features:**
 
 * Let anyone, technical or not, contribute to documentation.
@@ -82,12 +80,22 @@ server you'll be running the API.
 ```bash
 # Install allwrite-docs executable (/usr/local/bin/allwrite-docs).
 curl -L https://github.com/LevInteractive/allwrite-docs/blob/master/install.sh?raw=true | sh
+```
 
+Import the postgres schema.
+
+```bash
 # Import database schema. Note, you'll need to have postgres setup and know what
 # your username and password is.
 curl -O https://raw.githubusercontent.com/LevInteractive/allwrite-docs/master/store/postgres/sql/pages.sql
 psql < pages.sql
+```
 
+Setup the environmental variables. This will also need to be done by
+[supervisord](/docs/supervisord.md), or whatever program you use to run
+allwrite.
+
+```bash
 # Download the environmental variables. These need to available to the
 # user/shell so allwrite can connect.
 curl https://raw.githubusercontent.com/LevInteractive/allwrite-docs/master/creds.example.sh > creds
@@ -97,12 +105,15 @@ vim creds
 
 # Load the variables.
 source creds
-
-# Run the server. You'll eventually want to run this in the background and use
-# something like nginx to create a reverse proxy.
-allwrite start
 ```
 
+Start the server.
+
+```bash
+# Run the server. You'll eventually want to run this in the background and use
+# something like nginx to create a reverse proxy.
+allwrite s
+```
 
 ## API
 
@@ -112,122 +123,7 @@ There are three endpoints.
 * /menu
 * /?s=any+escaped+string
 
-#### GET /menu
-
-Returns a collection of page fragments.
-
-```json
-{
-  "code":200,
-  "result":[
-    {
-      "name":"Homepage",
-      "type":"file",
-      "slug":"",
-      "order":0,
-      "updated":"2017-09-30T23:35:31.663365Z",
-      "created":"2017-09-30T23:35:31.663365Z"
-    },
-    {
-      "name":"Only one deep",
-      "type":"file",
-      "slug":"another-sub-directory",
-      "order":0,
-      "updated":"2017-09-30T23:35:31.663365Z",
-      "created":"2017-09-30T23:35:31.663365Z",
-      "children":[
-        {
-          "name":"This is a deep file",
-          "type":"file",
-          "slug":"another-sub-directory/a-deeper-directory",
-          "order":0,
-          "updated":"2017-09-30T23:35:31.663365Z",
-          "created":"2017-09-30T23:35:31.663365Z"
-        }
-      ]
-    },
-    {
-      "name":"A Sub Directory",
-      "type":"dir",
-      "slug":"a-sub-directory",
-      "order":1,
-      "updated":"2017-09-30T23:35:31.663365Z",
-      "created":"2017-09-30T23:35:31.663365Z",
-      "children":[
-        {
-          "name":"How to be a friend",
-          "type":"file",
-          "slug":"a-sub-directory/how-to-be-a-friend",
-          "order":1,
-          "updated":"2017-09-30T23:35:31.663365Z",
-          "created":"2017-09-30T23:35:31.663365Z"
-        }
-      ]
-    },
-    {
-      "name":"Images!",
-      "type":"file",
-      "slug":"images",
-      "order":2,
-      "updated":"2017-09-30T23:35:31.663365Z",
-      "created":"2017-09-30T23:35:31.663365Z"
-    }
-  ]
-}
-```
-
-#### GET /page(/:slug)
-
-Pull a page based on its slug. If not provided, `|0|` page will be used.
-
-```json
-{
-  "code":200,
-  "result":{
-    "name":"Homepage",
-    "type":"file",
-    "slug":"",
-    "order":0,
-    "updated":"2017-09-30T23:21:35.044194Z",
-    "created":"2017-09-30T23:21:35.044194Z",
-    "doc_id":"1V5G8XmX6ggLVu09QJXqONQkLKfIix-2bMuefFYbmTmE",
-    "html":"[full clean html]",
-    "md":"[full clean markdown]"
-  }
-}
-```
-
-#### GET /?q=my+search
-
-This will search for results based on your q parameter. The string needs to be URL encoded.
-
-```json
-{
-    "code": 200,
-    "result": [
-        {
-            "name": "This is a deep file",
-            "type": "file",
-            "slug": "another-sub-directory/a-deeper-directory",
-            "order": 0,
-            "updated": "2017-09-30T23:35:31.663365Z",
-            "created": "2017-09-30T23:35:31.663365Z"
-        }
-    ]
-}
-```
-
-#### Page not found
-
-If a page is not found, an error will be returned with error code `404`.
-
-```json
-{
-  "code":400,
-  "result":null,
-  "error":"not found"
-}
-```
+See response examples [here](/docs/api.md).
 
 ## CLI
 
