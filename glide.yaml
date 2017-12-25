@@ -16,3 +16,6 @@ import:
   version: ^2.0.0
 - package: github.com/lib/pq
 - package: github.com/andreyvit/diff
+- package: golang.org/x/crypto
+  subpackages:
+  - acme/autocert

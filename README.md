@@ -57,11 +57,10 @@ Formatting within the document is done by using Google's wysiwyg, as usual. Allw
 Formatting guide:
 
 * Images just work. Plus they're hosted by Google for free!
-* Indent a block of text for a `<blockquote>`.
 * Unordered and ordered lists are treated as such.
 * Colors, text alignment, and other frills will have no effect. Create an issue if you have a suggestion.
 * Headers will be treated as such (`<h1>`, `<h2>`, and `<h3>`).
-* Format code as you normally would (backticks followed by the language).
+* Format code as you normally would (3 backticks followed by the language).
 
 ## Examples
 
@@ -117,12 +116,6 @@ allwrite s
 ```
 
 ## API
-
-There are three endpoints.
-
-* /:slug
-* /menu
-* /?s=any+escaped+string
 
 See response examples [here](/docs/api.md).
 
