@@ -130,17 +130,18 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 			switch mime := i.MimeType; mime {
 			case "application/vnd.google-apps.document":
 				htmlBytes, err := client.getContents(i.Id, "text/html")
+
 				if err != nil {
 					fmt.Printf("Skipping. There was an error grabbing the contents for a document: %s", err.Error())
 					continue
 				}
+
 				md, err := MarshalMarkdownFromHTML(bytes.NewReader(htmlBytes))
 				if err != nil {
 					fmt.Printf("There was a problem parsing html to markdown: %s", err.Error())
 					continue
 				}
 
-				fmt.Println(i)
 				newPage.Md = md
 				newPage.HTML = string(blackfriday.Run([]byte(md)))
 				newPage.Type = "file"
@@ -203,6 +204,7 @@ func UpdateMenu(client *Client, env *util.Env) {
 		log.Fatalf("There was an error removing previous records: %s", err.Error())
 		return
 	}
+
 	if _, err := env.DB.SavePages(p.collection); err != nil {
 		log.Fatalf("There was an error saving records: %s", err.Error())
 		return

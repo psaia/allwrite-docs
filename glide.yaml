@@ -15,3 +15,4 @@ import:
 - package: gopkg.in/russross/blackfriday.v2
   version: ^2.0.0
 - package: github.com/lib/pq
+- package: github.com/andreyvit/diff

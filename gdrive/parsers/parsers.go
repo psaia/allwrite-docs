@@ -100,19 +100,19 @@ func InlineWalker(b *bytes.Buffer, n *html.Node, parentCSS string) {
 		if c.Type == html.ElementNode {
 			styles := parentCSS + GetAttr(c.Attr, "style")
 
-			// If it's a link, inject the link href. Hackylovely AF.
-			if c.DataAtom.String() == "a" {
+			switch c.DataAtom.String() {
+			case "a":
 				styles += "___LINKΔΔΔ" + GetAttr(c.Attr, "href") + "ΔΔΔ___"
-			}
-
-			// If at an image, there is no reason to go deeper in since nothing can go
-			// in a image tag. Just write it out.
-			if c.DataAtom.String() == "img" {
+			case "img":
+				// If at an image, there is no reason to go deeper in since nothing can go
+				// in a image tag. Just write it out.
 				alt := GetAttr(c.Attr, "alt")
 				src := GetAttr(c.Attr, "src")
 				styles += "___IMGΔΔΔ" + alt + "∏" + src + "ΔΔΔ___"
 				b.WriteString(FormatStyle(styles, c.Data))
 				return
+			case "br":
+				b.WriteString("\n")
 			}
 
 			InlineWalker(b, c, styles)

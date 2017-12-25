@@ -21,7 +21,7 @@ Some general text.
 
 ### I am an h3
 
-Sometimes text has an *italic* style.
+Sometimes text has an _italic_ style.
 
 
 

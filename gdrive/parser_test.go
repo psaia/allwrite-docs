@@ -4,6 +4,8 @@ import (
 	"io/ioutil"
 	"strings"
 	"testing"
+
+	"github.com/andreyvit/diff"
 )
 
 func getFixture(filename string) string {
@@ -27,7 +29,10 @@ func TestMarshalMarkdownFromHTML(t *testing.T) {
 	}
 
 	if transformedMd != mdDoc {
-		t.Error("HTML did not translate to markdown properly.")
+		t.Errorf(
+			"HTML did not translate to image markdown properly: \n%v",
+			diff.LineDiff(mdDoc, transformedMd),
+		)
 	}
 }
 
@@ -37,11 +42,15 @@ func TestMarshalMarkdownFromHTMLImages(t *testing.T) {
 
 	r := strings.NewReader(htmlDoc)
 	transformedMd, err := MarshalMarkdownFromHTML(r)
+
 	if err != nil {
 		t.Error(err)
 	}
 
 	if transformedMd != mdDoc {
-		t.Error("HTML did not translate to image markdown properly.")
+		t.Errorf(
+			"HTML did not translate to image markdown properly: \n%v",
+			diff.LineDiff(mdDoc, transformedMd),
+		)
 	}
 }
