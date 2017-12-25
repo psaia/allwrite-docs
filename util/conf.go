@@ -11,6 +11,7 @@ type Conf struct {
 	ClientSecret     string `env:"CLIENT_SECRET,required"`
 	Frequency        int    `env:"FREQUENCY,required"`
 	Port             string `env:"PORT,required"`
+	CertbotEmail     string `env:"CERTBOT_EMAIL"`
 	Domain           string `env:"DOMAIN"`
 	PostgresUser     string `env:"PG_USER"`
 	PostgresPassword string `env:"PG_PASS"`

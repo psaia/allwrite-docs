@@ -26,7 +26,8 @@ export PG_HOST="localhost"
 export PORT=":8000"
 
 # Only needed if listening on port 443. Used for certbot.
-export DOMAIN=""
+export DOMAIN="my-domain.com"
+export CERTBOT_EMAIL="engineering@your-company.com"
 
 # How often Google is queried for updates specified in milliseconds.
 export FREQUENCY="300000"

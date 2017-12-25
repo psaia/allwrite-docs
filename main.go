@@ -27,7 +27,7 @@ Address: %s
 func main() {
 	app := cli.NewApp()
 	app.Name = "Allwrite Docs | Publish your documentation with Drive."
-	app.Version = "0.0.2"
+	app.Version = "0.0.3"
 	app.Commands = []cli.Command{
 		{
 			Name:    "start",

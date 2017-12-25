@@ -96,15 +96,15 @@ func Listen(env *util.Env) {
 	log.Printf("\nListening on %s%s\n", env.CFG.Domain, env.CFG.Port)
 
 	if env.CFG.Port == ":443" {
-		certManager := autocert.Manager{
+		m := autocert.Manager{
 			Prompt:     autocert.AcceptTOS,
 			HostPolicy: autocert.HostWhitelist(env.CFG.Domain),
-			Cache:      autocert.DirCache("./certs"),
+			Cache:      autocert.DirCache("certs"),
+			Email:      env.CFG.CertbotEmail,
 		}
 		server := &http.Server{
-			Addr: env.CFG.Port,
 			TLSConfig: &tls.Config{
-				GetCertificate: certManager.GetCertificate,
+				GetCertificate: m.GetCertificate,
 			},
 		}
 		if err := server.ListenAndServeTLS("", ""); err != nil {
