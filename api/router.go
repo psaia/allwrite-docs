@@ -3,7 +3,6 @@ package api
 import (
 	"crypto/tls"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"regexp"
@@ -78,9 +77,10 @@ func Listen(env *util.Env) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 		w.Header().Set("Cache-Control", "public, max-age=3600")
+
 		s := req.URL.Query().Get("q")
 		uri := stripSlashes.ReplaceAllString(req.RequestURI, "")
-		fmt.Printf(req.RequestURI)
+
 		if uri == "menu" {
 			log.Printf("Request: Menu\n")
 			getMenu(env, uri, w, req)
@@ -93,22 +93,26 @@ func Listen(env *util.Env) {
 		}
 	})
 
+	log.Printf("\nListening on %s%s\n", env.CFG.Domain, env.CFG.Port)
+
 	if env.CFG.Port == ":443" {
 		certManager := autocert.Manager{
 			Prompt:     autocert.AcceptTOS,
 			HostPolicy: autocert.HostWhitelist(env.CFG.Domain),
-			Cache:      autocert.DirCache("certs"),
+			Cache:      autocert.DirCache("./certs"),
 		}
 		server := &http.Server{
-			Addr: ":443",
+			Addr: ":https",
 			TLSConfig: &tls.Config{
 				GetCertificate: certManager.GetCertificate,
 			},
 		}
-		log.Fatal(server.ListenAndServeTLS("", ""))
+		if err := server.ListenAndServeTLS("", ""); err != nil {
+			log.Fatal(err)
+		}
 	} else {
-		log.Fatal(http.ListenAndServe(env.CFG.Port, nil))
+		if err := http.ListenAndServe(env.CFG.Port, nil); err != nil {
+			log.Fatal(err)
+		}
 	}
-
-	log.Printf("\nListening on %s\n", env.CFG.Port)
 }

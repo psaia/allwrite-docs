@@ -2,7 +2,6 @@ package gdrive
 
 import (
 	"bytes"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"regexp"
@@ -100,7 +99,7 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 		Do()
 
 	if err != nil {
-		fmt.Printf("Unable to retrieve files from google drive: %v\n", err)
+		log.Printf("Unable to retrieve files from google drive: %v\n", err)
 		return
 	}
 
@@ -109,12 +108,12 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 			// Grab the sort order and title from formatted title names.
 			parts, err := getPartsFromTitle(i.Name)
 			if err != nil {
-				fmt.Printf("Skipping document. There was an issue getting parts from title: %s\n", err.Error())
+				log.Printf("Skipping document. There was an issue getting parts from title: %s\n", err.Error())
 				continue
 			}
 			// If the format was incorrect an empty struct will be returned.
 			if parts.Title == "" {
-				fmt.Printf("Skipping document because of format: %s\n", i.Name)
+				log.Printf("Skipping document because of format: %s\n", i.Name)
 				continue
 			}
 
@@ -132,13 +131,13 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 				htmlBytes, err := client.getContents(i.Id, "text/html")
 
 				if err != nil {
-					fmt.Printf("Skipping. There was an error grabbing the contents for a document: %s", err.Error())
+					log.Printf("Skipping. There was an error grabbing the contents for a document: %s", err.Error())
 					continue
 				}
 
 				md, err := MarshalMarkdownFromHTML(bytes.NewReader(htmlBytes))
 				if err != nil {
-					fmt.Printf("There was a problem parsing html to markdown: %s", err.Error())
+					log.Printf("There was a problem parsing html to markdown: %s", err.Error())
 					continue
 				}
 
@@ -157,7 +156,7 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 					}
 				}
 
-				fmt.Printf("Saving page \"%s\" with slug \"%s\".\n", newPage.Name, newPage.Slug)
+				log.Printf("Saving page \"%s\" with slug \"%s\".\n", newPage.Name, newPage.Slug)
 				pages.appendPage(newPage)
 
 			case "application/vnd.google-apps.folder":
@@ -170,17 +169,17 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 				}
 				newPage.Type = "dir"
 				newPage.Slug = dirBaseSlug
-				fmt.Printf("Saving directory \"%s\" with slug \"%s\".\n", newPage.Name, newPage.Slug)
+				log.Printf("Saving directory \"%s\" with slug \"%s\".\n", newPage.Name, newPage.Slug)
 				pages.appendPage(newPage)
 
-				fmt.Printf("Submerging deeper into %s\n", i.Name)
+				log.Printf("Submerging deeper into %s\n", i.Name)
 				client.processDriveFiles(env, dirBaseSlug, i.Id, pages)
 			default:
-				fmt.Printf("Unknown filetype in drive directory: %s\n", mime)
+				log.Printf("Unknown filetype in drive directory: %s\n", mime)
 			}
 		}
 	} else {
-		fmt.Println("No files found.")
+		log.Println("No files found.")
 	}
 }
 
