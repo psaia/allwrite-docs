@@ -102,7 +102,7 @@ func Listen(env *util.Env) {
 			Cache:      autocert.DirCache("./certs"),
 		}
 		server := &http.Server{
-			Addr: ":https",
+			Addr: env.CFG.Port,
 			TLSConfig: &tls.Config{
 				GetCertificate: certManager.GetCertificate,
 			},
