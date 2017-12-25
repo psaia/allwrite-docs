@@ -12,39 +12,6 @@ import (
 	"github.com/urfave/cli"
 )
 
-var configMessage = `
-
-#!/bin/bash
-
-# These are the environmental variables you should set before running allwrite.
-# You can set these in something like Upstart or in your current shell by doing:
-
-# source ./creds.sh
-# ------------------------------------------------------------------------------
-
-# Basically, you just need to make sure these get set somehow, somewhere.
-
-# The ID of the base directory for the docs (you can grab it from the URL in
-# Drive).
-export ACTIVE_DIR="xxxxxxxxxxxxxxxxxxx"
-
-# Path to your Google client secret json file.
-export CLIENT_SECRET="$PWD/client_secret.json"
-
-# The storage system to use - currently postgres is the only option.
-export STORAGE="postgres"
-export PG_USER="root"
-export PG_DB="allwrite"
-export PG_HOST="localhost"
-
-# Specify the port to run the application on.
-export PORT=":8000"
-
-# How often Google is queried for updates specified in milliseconds.
-export FREQUENCY="300000"
-
-`
-
 var debugInfoMessage = `
 
 ------------------------------------------------------
@@ -60,7 +27,7 @@ Address: %s
 func main() {
 	app := cli.NewApp()
 	app.Name = "Allwrite Docs | Publish your documentation with Drive."
-	app.Version = "0.0.1"
+	app.Version = "0.0.2"
 	app.Commands = []cli.Command{
 		{
 			Name:    "start",
@@ -134,7 +101,7 @@ func main() {
 func setupConf() *util.Env {
 	var cfg util.Conf
 	if err := envdecode.Decode(&cfg); err != nil {
-		log.Println(configMessage + "\n")
+		log.Println("Please make sure the environmental variables are set first.")
 		return nil
 	}
 	env := &util.Env{

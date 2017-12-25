@@ -105,7 +105,7 @@ func Listen(env *util.Env) {
 				GetCertificate: certManager.GetCertificate,
 			},
 		}
-		server.ListenAndServeTLS("", "")
+		log.Fatal(server.ListenAndServeTLS("", ""))
 	} else {
 		log.Fatal(http.ListenAndServe(env.CFG.Port, nil))
 	}
