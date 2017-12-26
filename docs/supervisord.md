@@ -23,6 +23,7 @@ environment=
         PG_HOST="localhost",
         PORT=":443",
         DOMAIN="my-domain.com",
+        CERTBOT_EMAIL="my@email.com",
         FREQUENCY="300000"
 redirect_stderr=true
 stdout_logfile=/var/log/supervisor/allwrite.log

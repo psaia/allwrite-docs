@@ -23,32 +23,31 @@ This API connects with your Google Drive and provides RESTful endpoints which re
 * [Themes](#themes)
 * [Installation](#installation)
 * [API](#api)
+* [Contributing](#contributing)
 * [CLI](#cli)
 
 ## Workflow
 
-Give authors access to the activated folder using the typical means of doing so within Drive. Then authors can create pages and folders within the activated folder. Pages can have children infinitely deep by using directories. Pages and folders are both made public and ordered by using a special format in their page name.
+Give authors access to the activated folder using the typical means of doing so
+within Drive. Then authors can create pages and folders within the activated
+folder. Pages can have children infinitely deep by using directories. Pages and
+folders are both made public and ordered by using a special format in their page
+name.
 
 ```
 |n| Page Title
 ```
 
-The number between the two pipes (`n`) is what the menu is sorted by. It can be any number. If a page or directory does not have this format, it will not be public. This is useful when writing pages that should not yet be public (aka drafts).
+The number between the two pipes (`n`) is what the menu is sorted by. It can be
+any number. If a page or directory does not have this format, it will not be
+public. This is useful when writing pages that should not yet be public (aka
+drafts).
 
-Lastly, if zero is used (`|0|`), this is considered to be the landing page of the sub directory. If there is no directory, it is used as the default response, or "homepage". If a `|0|` is not provided for the root or sub directory, the `slug` property will be false. This is common when there isn't a landing page, only sub pages.
-
-```
-|0| Getting Started ◀────────── Accessible via "/" or "/getting-started".
-|1| Who we are ◀─────────────── Accessible via "getting-started".
-|2| Configuration/◀──────────── Accessible via "/configuration".
-  |0| Why? ◀─────────────────── Accessible via "/configuration" or "/configuration/why".
-  |1| Using the CLI ◀────────── Accessible via "/configuration/using-the-cli".
-|3| The Dashboard/ ◀─────────── NOT accessible! Header only.
-  |1| Mathematics ◀──────────── Accessible via "/the-dashboard/mathematics".
-  |2| Machine Learning ◀─────── Accessible via "/the-dashboard/machine-learning".
-  |3| A.I. ◀─────────────────── Accessible via "/the-dashboard/ai".
-  About Us ◀─────────────────── Not public.
-```
+Lastly, if zero is used (`|0|`), this is considered to be the landing page of
+the sub directory. If there is no directory, it is used as the default response,
+or "homepage". If a `|0|` is not provided for the root or sub directory, the
+`slug` property will be false. This is common when there isn't a landing page,
+only sub pages.
 
 ## Formatting
 
@@ -77,23 +76,20 @@ First, you should generate a OAuth 2.0 json file [here](https://console.develope
 "other" for Application Type then place the client_secret.json file on the
 server you'll be running the API.
 
+Head to your server and run the following to **install or update** Allwrite:
+
 ```bash
-# Install allwrite-docs executable (/usr/local/bin/allwrite-docs).
 curl -L https://github.com/LevInteractive/allwrite-docs/blob/master/install.sh?raw=true | sh
 ```
 
-Import the postgres schema.
+If it's you're installing for the first time import the postgres schema:
 
 ```bash
-# Import database schema. Note, you'll need to have postgres setup and know what
-# your username and password is.
 curl -O https://raw.githubusercontent.com/LevInteractive/allwrite-docs/master/store/postgres/sql/pages.sql
 psql < pages.sql
 ```
 
-Setup the environmental variables. This will also need to be done by
-[supervisord](/docs/supervisord.md), or whatever program you use to run
-allwrite.
+Finally, try to run the server in the foreground:
 
 ```bash
 # Download the environmental variables. These need to available to the
@@ -115,36 +111,21 @@ Start the server.
 allwrite s
 ```
 
+Once you confirmed that it works, setup something like supervisord to run it for
+you. You can see an example configuration file for supervisord [here](/docs/supervisord.md)
+
 ## API
 
 See response examples [here](/docs/api.md).
+
+## Contributing
+
+See docs for development [here](/docs/development.md).
 
 ## CLI
 
 After installing, you'll have access to the CLI
 
+```bash
 $ allwrite-docs
-
 ```
-NAME:
-   Allwrite Docs | Publish your documentation with Drive. - A new cli application
-
-USAGE:
-   allwrite-docs [global options] command [command options] [arguments...]
-
-VERSION:
-   0.0.1
-
-COMMANDS:
-     start, s  Start the server in the foreground. This will authenticate with Google if it's the first time you're running.
-     setup     Only authenticate with Google and do not run the allwrite server.
-     pull, p   Pull the latest content from Google Drive.
-     reset, r  Reset any saved authentication credentials for Google. You will need to re-authenticate after doing this.
-     info, i   Display environmental variables. Useful for making sure everything is setup correctly.
-     help, h   Shows a list of commands or help for one command
-
-GLOBAL OPTIONS:
-   --help, -h     show help
-   --version, -v  print the version
-```
-
