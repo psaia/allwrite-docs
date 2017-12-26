@@ -15,6 +15,8 @@ This API connects with your Google Drive and provides RESTful endpoints which re
 * URL structure builds itself based on the directory structure.
 * Did I mention that it's crazy fast since pages are pre-cached?
 
+![screenshot](/docs/screenshot.png)
+
 # Table of Contents
 
 * [Workflow](#workflow)
