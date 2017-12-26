@@ -146,7 +146,7 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 					[]byte(md),
 					blackfriday.WithExtensions(
 						blackfriday.Tables|blackfriday.Autolink|
-							blackfriday.AutoHeadingIDs,
+							blackfriday.AutoHeadingIDs|blackfriday.FencedCode,
 					),
 				))
 
