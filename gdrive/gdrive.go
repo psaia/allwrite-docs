@@ -142,7 +142,14 @@ func (client *Client) processDriveFiles(env *util.Env, baseSlug string, parentID
 				}
 
 				newPage.Md = md
-				newPage.HTML = string(blackfriday.Run([]byte(md)))
+				newPage.HTML = string(blackfriday.Run(
+					[]byte(md),
+					blackfriday.WithExtensions(
+						blackfriday.Tables|blackfriday.Autolink|
+							blackfriday.AutoHeadingIDs,
+					),
+				))
+
 				newPage.Type = "file"
 
 				if parts.Order == 0 {
