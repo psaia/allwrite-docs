@@ -48,8 +48,7 @@ drafts).
 Lastly, if zero is used (`|0|`), this is considered to be the landing page of
 the sub directory. If there is no directory, it is used as the default response,
 or "homepage". If a `|0|` is not provided for the root or sub directory, the
-`slug` property will be false. This is common when there isn't a landing page,
-only sub pages.
+return menu item will have a `type` of `dir` instead of `file`.
 
 ## Formatting
 
