@@ -4,6 +4,8 @@ An incredibly fast documentation API powered by Google Drive written purely in G
 
 This API connects with your Google Drive and provides RESTful endpoints which return the pages within Drive in a organized and usable format. With this API, beautiful (or ugly) user interfaces can be created and reused anywhere you need to display documentation online.
 
+![screenshot](/docs/screenshot.png)
+
 **Features:**
 
 * Let anyone, technical or not, contribute to documentation.
@@ -14,8 +16,6 @@ This API connects with your Google Drive and provides RESTful endpoints which re
 * No dependencies other than Postgres.
 * URL structure builds itself based on the directory structure.
 * Did I mention that it's crazy fast since pages are pre-cached?
-
-![screenshot](/docs/screenshot.png)
 
 # Table of Contents
 
